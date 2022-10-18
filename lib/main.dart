@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'store.dart';
+
+import 'counter.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,8 +29,58 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyModularHomePage(store: Store(initialState: const AppState(counter: CounterState(count: 0)))),
     );
+  }
+}
+
+@immutable
+class AppState {
+  const AppState({required this.counter});
+  final CounterState counter;
+}
+
+AppState incrementCounter(Ref ref, AppState state) {
+  return AppState(counter: CounterState(count: state.counter.count + 1));
+}
+
+class MyModularHomePage extends StatelessWidget {
+  const MyModularHomePage({super.key, required this.store});
+  final StoreInterface<AppState> store;
+
+  @override
+  Widget build(BuildContext context) {
+    return store.viewBuilder((state, viewStore) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Riverpod Composable Arch'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'You have pushed the button this many times:',
+              ),
+              Counter(
+                store: store.scope(
+                  globalToLocalState: (appState) => appState.counter,
+                  localToGlobalAction: (localAction) {
+                    return (Ref ref, AppState state) async {
+                      return AppState(counter: await localAction(ref, state.counter));
+                    };
+                  })
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => viewStore.send(incrementCounter),
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
+      );
+    });
   }
 }
 
