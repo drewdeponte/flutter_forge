@@ -28,7 +28,7 @@ class Counter extends StatelessWidget {
         Text('${state.count}', style: Theme.of(context).textTheme.headline4,),
         OutlinedButton(
           onPressed: () => viewStore.send(increment),
-          child: const Text("isolated incr"))
+          child: const Text("increment"))
       ]);
     });
   }

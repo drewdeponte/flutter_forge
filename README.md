@@ -23,6 +23,7 @@ address.
 
 - [x] compose a component such that it fully owns its own state
 	- [x] compose a component such that component actions are initiated internally and are handled internally
+	- [x] compose a component such that the parent component can send actions to the child components store
 - [x] compose a component such that it gets all of its state from its parent component
 	- [x] compose a component such that component actions are initiated internally and are handled in the parent component
 - [ ] compose a component such that it gets some of its state from its parent component but also owns some of its owns state
