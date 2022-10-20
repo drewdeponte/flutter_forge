@@ -63,3 +63,5 @@ coverage/
 
 # Coverage load helper
 test/coverage_helper_test.dart
+
+.ccls-cache
