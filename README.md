@@ -26,7 +26,7 @@ address.
 	- [x] compose a component such that the parent component can send actions to the child components store
 - [x] compose a component such that it gets all of its state from its parent component
 	- [x] compose a component such that component actions are initiated internally and are handled in the parent component
-- [ ] compose a component such that it gets some of its state from its parent component but also owns some of its owns state
+- [x] compose a component such that it gets some of its state from its parent component but also owns some of its owns state
 - [ ] compose a component such that component actions are only initiated internally and handled internally and external actions are blocked/ignored
 - [ ] compose a component such that component actions are initiated in the parent and are handled in the child component
 - [ ] compose a component's state & state store with a state & state store that addresses generic loading. This is ideally figuring out how to wrap `AsyncValue<T>` and `FutureProvider` from Riverpod in a way that is composable.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'some_state_from_parent_other_owned.dart';
 import 'store.dart';
 
 import 'compose_with_parent_owning_state.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
 }
 
 final composeWithParentOwningStateStore = Store(initialState: const ComposeWithParentOwningStateState(counter: CounterState(count: 10)));
+final someStateFromParentOtherOwnedStore = Store(initialState: const SomeStateFromParentOtherOwnedState(isLoggedIn: false));
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -62,9 +64,18 @@ class Home extends StatelessWidget {
                 child: const Text('Send Action to Child Store'),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: ElevatedButton(
+                onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => SomeStateFromParentOtherOwned(store: someStateFromParentOtherOwnedStore))); },
+                child: const Text('Some State From Parent Other Owned'),
+              ),
+            ),
           ]
         )
       )
     );
   }
 }
+
+
