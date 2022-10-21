@@ -47,6 +47,7 @@ app.*.map.json
 /android/app/release
 
 #Flutter Version Manager
+.fvm
 .fvm/flutter_sdk
 lib/logic/graphql/graphql_api*.dart
 **/*.freezed.dart
