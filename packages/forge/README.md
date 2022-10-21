@@ -30,3 +30,4 @@ address.
 - [ ] compose a component such that component actions are only initiated internally and handled internally and external actions are blocked/ignored
 - [ ] compose a component such that component actions are initiated in the parent and are handled in the child component
 - [ ] compose a component's state & state store with a state & state store that addresses generic loading. This is ideally figuring out how to wrap `AsyncValue<T>` and `FutureProvider` from Riverpod in a way that is composable.
+- [ ] re-assess the concept of multi-store components
