@@ -2,7 +2,7 @@ library logged_in_user_counter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'store.dart';
+import 'package:forge/forge.dart';
 
 // State definition
 @immutable

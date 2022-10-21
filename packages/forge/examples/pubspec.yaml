@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_riverpod: ^2.0.2
   fimber: ^0.6.6
+  forge:
+    path: ..
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:forge/forge.dart';
 
-import 'store.dart';
 import 'counter.dart';
 
 final _counterStore = Store(initialState: const CounterState(count: 100));
