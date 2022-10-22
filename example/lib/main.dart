@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:forge/forge.dart';
+import 'package:flutter_forge/flutter_forge.dart';
 
 import 'compose_with_parent_owning_state.dart';
 import 'compose_component_owning_state.dart';

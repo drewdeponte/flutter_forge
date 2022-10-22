@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forge/forge.dart';
+import 'package:flutter_forge/flutter_forge.dart';
 
 import 'counter.dart';
 

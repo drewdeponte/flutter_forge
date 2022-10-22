@@ -2,7 +2,7 @@ library counter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:forge/forge.dart';
+import 'package:flutter_forge/flutter_forge.dart';
 
 // State definition
 @immutable

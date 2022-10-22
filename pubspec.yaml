@@ -1,4 +1,4 @@
-name: forge
+name: flutter_forge
 description: >
   A robust opinionated framework for building state based applications in a
   modular, testable, and composable style.
