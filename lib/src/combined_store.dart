@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_forge/src/combined_store.dart';
+import 'package:flutter_forge/src/combined_view_store.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'scoped_store.dart';
 import 'store_interface.dart';
 import 'reducer_action.dart';
-import 'view_store_provider.dart';
 import 'view_store_interface.dart';
-import 'view_store.dart';
-import 'scoped_store.dart';
 
-class Store<State> extends StoreInterface<State> {
-  Store({required State initialState}): _stateNotifierProvider = viewStoreProvider(initialState);
-  final StateNotifierProvider<ViewStore<State>, State> _stateNotifierProvider;
+class CombinedStore<State> extends StoreInterface<State> {
+  final Provider<State> stateProvider;
+  final Function(ReducerAction<State> action) converter;
+
+  CombinedStore({required this.stateProvider, required this.converter});
 
   @override
   AlwaysAliveProviderListenable<State> get provider {
-    return _stateNotifierProvider;
+    return stateProvider;
   }
 
   @override
-  ViewStore<State> viewStore(WidgetRef ref) {
-    return ref.read(_stateNotifierProvider.notifier);
+  ViewStoreInterface<State> viewStore(WidgetRef ref) {
+    return CombinedViewStore(converter);
   }
 
   @override
   Consumer viewBuilder(Widget Function(State state, ViewStoreInterface<State> viewStore) builder) {
     return Consumer(builder: (context, ref, child) {
-      final state = ref.watch(_stateNotifierProvider);
+      final state = ref.watch(stateProvider);
       return builder.call(state, viewStore(ref));
-    },);
+    });
   }
 
   @override
@@ -35,26 +35,10 @@ class Store<State> extends StoreInterface<State> {
     return ScopedStore<ChildState, State>(
       parentStore: this,
       stateProvider: Provider<ChildState>((ref) {
-        final parentState = ref.watch(_stateNotifierProvider);
+        final parentState = ref.watch(stateProvider);
         return globalToLocalState.call(parentState);
       }),
       localActionToGlobalAction: localToGlobalAction
-    );
-  }
-
-  static StoreInterface<ChildState> combine<StoreAState, StoreBState, ChildState>({
-    required StoreInterface<StoreAState> storeA,
-    required StoreInterface<StoreBState> storeB,
-    required ChildState Function(StoreAState, StoreBState) build,
-    required Function(ReducerAction<ChildState> action) converter
-  }) {
-    return CombinedStore(
-      stateProvider: Provider((ref) {
-        final stateA = ref.watch(storeA.provider);
-        final stateB = ref.watch(storeB.provider);
-        return build.call(stateA, stateB);
-      }),
-      converter: converter
     );
   }
 

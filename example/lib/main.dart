@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 final composeWithParentOwningStateStore = Store(initialState: const ComposeWithParentOwningStateState(counter: CounterState(count: 10)));
-final someStateFromParentOtherOwnedStore = Store(initialState: const SomeStateFromParentOtherOwnedState(isLoggedIn: false));
+final someStateFromParentOtherOwnedStore = Store(initialState: const SomeStateFromParentOtherOwnedState(count: 0));
 
 class Home extends StatelessWidget {
   const Home({super.key});
