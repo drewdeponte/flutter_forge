@@ -26,48 +26,41 @@ GlobalAppState toggleIsLoggedIn(Ref ref, GlobalAppState state) {
 
 final _appStore = Store(initialState: const GlobalAppState(isLoggedIn: false));
 
-class SomeStateFromParentOtherOwned extends ConsumerWidget {
-  const SomeStateFromParentOtherOwned({super.key, required this.store});
-  final StoreInterface<SomeStateFromParentOtherOwnedState> store;
+class SomeStateFromParentOtherOwned extends ComponentWidget<SomeStateFromParentOtherOwnedState>  {
+  SomeStateFromParentOtherOwned({super.key, required super.store});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return store.viewBuilder((state, viewStore) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Compose with Parent Owning State'),
+  Widget buildView(context, ref, state, viewStore) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Compose with Parent Owning State'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            LoggedInUserCounter(
+              store: Store.combine(
+                storeA: store,
+                storeB: _appStore,
+                build: (myState, appState) => LoggedInUserCounterState(isLoggedIn: appState.isLoggedIn, count: myState.count),
+                converter: (ReducerAction<LoggedInUserCounterState> action) {
+                  if (action == LoggedInUserCounterAction.increment) {
+                    viewStore.send(incrementCount);
+                  } else if (action == LoggedInUserCounterAction.toggleIsLoggedIn) {
+                    _appStore.viewStore(ref).send(toggleIsLoggedIn);
+                  } else if (action == LoggedInUserCounterAction.foo) {
+                    // intentionally swallow an action
+                  }
+                })
+            ),
+            ElevatedButton(
+              onPressed: () { _appStore.viewStore(ref).send(toggleIsLoggedIn); },
+              child: const Text('Toggle isLoggedIn')
+            )
+          ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              LoggedInUserCounter(
-                store: Store.combine(
-                  storeA: store,
-                  storeB: _appStore,
-                  build: (myState, appState) => LoggedInUserCounterState(isLoggedIn: appState.isLoggedIn, count: myState.count),
-                  converter: (ReducerAction<LoggedInUserCounterState> action) {
-                    if (action == LoggedInUserCounterAction.increment) {
-                      print("DREW: converted counter increment");
-                      viewStore.send(incrementCount);
-                    } else if (action == LoggedInUserCounterAction.toggleIsLoggedIn) {
-                      print("DREW: converted toggle is logged in");
-                      _appStore.viewStore(ref).send(toggleIsLoggedIn);
-                    } else if (action == LoggedInUserCounterAction.foo) {
-                      print("DREW: swallowed foo");
-                    } else {
-                      print("YOU LOSE DREW!");
-                    }
-                  })
-              ),
-              ElevatedButton(
-                onPressed: () { _appStore.viewStore(ref).send(toggleIsLoggedIn); },
-                child: const Text('Toggle isLoggedIn')
-              )
-            ],
-          ),
-        ),
-      );
-    });
+      ),
+    );
   }
 }

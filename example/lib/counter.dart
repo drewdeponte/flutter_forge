@@ -12,24 +12,23 @@ class CounterState {
 }
 
 // Reducer Action
-CounterState increment(Ref ref, CounterState state) {
-  return CounterState(count: state.count + 1);
+class CounterAction {
+  static CounterState increment(Ref ref, CounterState state) {
+    return CounterState(count: state.count + 1);
+  }
 }
 
 // Widget
-class Counter extends StatelessWidget {
-  const Counter({super.key, required this.store});
-  final StoreInterface<CounterState> store;
+class Counter extends ComponentWidget<CounterState> {
+  Counter({super.key, required super.store});
 
   @override
-  Widget build(BuildContext context) {
-    return store.viewBuilder((state, viewStore) {
-      return Column(children: [
-        Text('${state.count}', style: Theme.of(context).textTheme.headline4,),
-        OutlinedButton(
-          onPressed: () => viewStore.send(increment),
-          child: const Text("increment"))
-      ]);
-    });
+  Widget buildView(context, ref, state, viewStore) {
+    return Column(children: [
+      Text('${state.count}', style: Theme.of(context).textTheme.headline4,),
+      OutlinedButton(
+        onPressed: () => viewStore.send(CounterAction.increment),
+        child: const Text("increment"))
+    ]);
   }
 }
