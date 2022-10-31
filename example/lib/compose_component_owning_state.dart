@@ -3,7 +3,9 @@ import 'package:flutter_forge/flutter_forge.dart';
 
 import 'counter.dart';
 
-final _counterStore = Store(initialState: const CounterState(count: 100));
+final _counterStore = Store(
+    initialState: const CounterState(count: 100),
+    environment: CounterEnvironment());
 
 class ComposeComponentOwningState extends StatelessWidget {
   const ComposeComponentOwningState({super.key});

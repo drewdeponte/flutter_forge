@@ -4,10 +4,13 @@ import 'package:flutter_forge/flutter_forge.dart';
 
 import 'counter.dart';
 
-final _sendActionToChildStoreStore = Store(initialState: const CounterState(count: 100));
+final _sendActionToChildStoreStore = Store(
+    initialState: const CounterState(count: 100),
+    environment: CounterEnvironment());
 
+// Widget
 class SendActionToChildStore extends ConsumerWidget {
-  const SendActionToChildStore ({super.key});
+  const SendActionToChildStore({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +27,9 @@ class SendActionToChildStore extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _sendActionToChildStoreStore.viewStore(ref).send(CounterAction.increment),
+        onPressed: () => _sendActionToChildStoreStore
+            .viewStore(ref)
+            .send(CounterAction.increment),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

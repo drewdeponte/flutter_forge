@@ -4,11 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'store_interface.dart';
 import 'view_store_interface.dart';
 
-abstract class ComponentWidget<S> extends ConsumerWidget {
+abstract class ComponentWidget<S, E> extends ConsumerWidget {
   ComponentWidget({super.key, required this.store});
-  final StoreInterface<S> store;
+  final StoreInterface<S, E> store;
 
-  Widget buildView(BuildContext context, WidgetRef ref, S state, ViewStoreInterface<S> viewStore);
+  Widget buildView(BuildContext context, WidgetRef ref, S state,
+      ViewStoreInterface<S, E> viewStore);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

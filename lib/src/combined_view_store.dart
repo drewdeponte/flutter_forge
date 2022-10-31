@@ -1,13 +1,13 @@
 import 'view_store_interface.dart';
 import 'reducer_action.dart';
 
-class CombinedViewStore<State, NewState> implements ViewStoreInterface<State> {
+class CombinedViewStore<S, E> implements ViewStoreInterface<S, E> {
   CombinedViewStore(this.converter);
 
-  final Function(ReducerAction<State> action) converter;
+  final Function(ReducerAction<S, E> action) converter;
 
   @override
-  void send(ReducerAction<State> action) {
+  void send(ReducerAction<S, E> action) {
     this.converter(action);
     // if action == LoggedInUserCounterAction.increment {
     //   // convert action to counter store action

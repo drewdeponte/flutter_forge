@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'view_store.dart';
 
-typedef ViewStoreProvider<State> = StateNotifierProvider<ViewStore<State>, State>;
+typedef ViewStoreProvider<S, E> = StateNotifierProvider<ViewStore<S, E>, S>;
 
-ViewStoreProvider<State> viewStoreProvider<State>(State initialState) {
-  return ViewStoreProvider<State>((ref) => ViewStore<State>(ref, initialState));
+ViewStoreProvider<S, E> viewStoreProvider<S, E>(S initialState, E environment) {
+  return ViewStoreProvider<S, E>((ref) => ViewStore<S, E>(
+      ref: ref, initialState: initialState, environment: environment));
 }

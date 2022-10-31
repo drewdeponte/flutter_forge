@@ -8,9 +8,10 @@ import 'view_store_interface.dart';
 import 'view_store.dart';
 import 'scoped_store.dart';
 
-class Store<S> extends StoreInterface<S> {
-  Store({required S initialState}): _stateNotifierProvider = viewStoreProvider(initialState);
-  final StateNotifierProvider<ViewStore<S>, S> _stateNotifierProvider;
+class Store<S, E> extends StoreInterface<S, E> {
+  Store({required S initialState, required E environment})
+      : _stateNotifierProvider = viewStoreProvider(initialState, environment);
+  final StateNotifierProvider<ViewStore<S, E>, S> _stateNotifierProvider;
 
   @override
   AlwaysAliveProviderListenable<S> get provider {
@@ -18,52 +19,60 @@ class Store<S> extends StoreInterface<S> {
   }
 
   @override
-  ViewStore<S> viewStore(WidgetRef ref) {
+  ViewStore<S, E> viewStore(WidgetRef ref) {
     return ref.read(_stateNotifierProvider.notifier);
   }
 
   @override
-  Consumer viewBuilder(Widget Function(S state, ViewStoreInterface<S> viewStore) builder) {
-    return Consumer(builder: (context, ref, child) {
-      final state = ref.watch(_stateNotifierProvider);
-      return builder.call(state, viewStore(ref));
-    },);
-  }
-
-  @override
-  StoreInterface<ChildState> scope<ChildState>({required ChildState Function(S) globalToLocalState, required ReducerAction<S> Function(ReducerAction<ChildState>) localToGlobalAction}) {
-    return ScopedStore<ChildState, S>(
-      parentStore: this,
-      stateProvider: Provider<ChildState>((ref) {
-        final parentState = ref.watch(_stateNotifierProvider);
-        return globalToLocalState.call(parentState);
-      }),
-      localActionToGlobalAction: localToGlobalAction
+  Consumer viewBuilder(
+      Widget Function(S state, ViewStoreInterface<S, E> viewStore) builder) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final state = ref.watch(_stateNotifierProvider);
+        return builder.call(state, viewStore(ref));
+      },
     );
   }
 
-  static StoreInterface<ChildState> combine<StoreAState, StoreBState, ChildState>({
-    required StoreInterface<StoreAState> storeA,
-    required StoreInterface<StoreBState> storeB,
-    required ChildState Function(StoreAState, StoreBState) build,
-    required Function(ReducerAction<ChildState> action) converter
-  }) {
+  @override
+  StoreInterface<CS, CE> scope<CS, CE>(
+      {required CS Function(S) toChildState,
+      required ReducerAction<S, E> Function(ReducerAction<CS, CE>)
+          fromChildAction}) {
+    return ScopedStore<CS, CE, S, E>(
+        parentStore: this,
+        stateProvider: Provider<CS>((ref) {
+          final parentState = ref.watch(_stateNotifierProvider);
+          return toChildState.call(parentState);
+        }),
+        fromChildAction: fromChildAction);
+  }
+
+  static StoreInterface<CS, CE> combine<SA, EA, SB, EB, CS, CE>(
+      {required StoreInterface<SA, EA> storeA,
+      required StoreInterface<SB, EB> storeB,
+      required CS Function(SA, SB) build,
+      required Function(ReducerAction<CS, CE> action) converter}) {
     return CombinedStore(
-      stateProvider: Provider((ref) {
-        final stateA = ref.watch(storeA.provider);
-        final stateB = ref.watch(storeB.provider);
-        return build.call(stateA, stateB);
-      }),
-      converter: converter
-    );
+        stateProvider: Provider((ref) {
+          final stateA = ref.watch(storeA.provider);
+          final stateB = ref.watch(storeB.provider);
+          return build.call(stateA, stateB);
+        }),
+        converter: converter);
   }
 
   @override
-  Consumer combinedViewBuilder<StateB>(StoreInterface<StateB> storeB, Widget Function(S stateA, ViewStoreInterface<S> viewStoreA, StateB stateB, ViewStoreInterface<StateB> viewStoreB) builder) {
+  Consumer combinedViewBuilder<SB, EB>(
+      StoreInterface<SB, EB> storeB,
+      Widget Function(S stateA, ViewStoreInterface<S, E> viewStoreA, SB stateB,
+              ViewStoreInterface<SB, EB> viewStoreB)
+          builder) {
     return Consumer(builder: (context, ref, child) {
       final stateA = ref.watch(provider);
       final stateB = ref.watch(storeB.provider);
-      return builder.call(stateA, viewStore(ref), stateB, storeB.viewStore(ref));
+      return builder.call(
+          stateA, viewStore(ref), stateB, storeB.viewStore(ref));
     });
   }
 }

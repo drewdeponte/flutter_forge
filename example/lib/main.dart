@@ -27,8 +27,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final composeWithParentOwningStateStore = Store(initialState: const ComposeWithParentOwningStateState(counter: CounterState(count: 10)));
-final someStateFromParentOtherOwnedStore = Store(initialState: const SomeStateFromParentOtherOwnedState(count: 0));
+final composeWithParentOwningStateStore = Store(
+    initialState: const ComposeWithParentOwningStateState(
+        counter: CounterState(count: 10)),
+    environment: ComposeWithParentOwningStateEnvironment());
+final someStateFromParentOtherOwnedStore = Store(
+    initialState: const SomeStateFromParentOtherOwnedState(count: 0),
+    environment: SomeStateFromParentOtherOwnedEnvironment());
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -36,42 +41,61 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Riverpod Composable Arch Examples')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const ComposeComponentOwningState())); },
-                child: const Text('Compose with Component Owning State'),
-              ),
+        appBar: AppBar(title: const Text('Riverpod Composable Arch Examples')),
+        body: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const ComposeComponentOwningState()));
+              },
+              child: const Text('Compose with Component Owning State'),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => ComposeWithParentOwningState(store: composeWithParentOwningStateStore))); },
-                child: const Text('Compose with Parent Owning State'),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ComposeWithParentOwningState(
+                            store: composeWithParentOwningStateStore)));
+              },
+              child: const Text('Compose with Parent Owning State'),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const SendActionToChildStore())); },
-                child: const Text('Send Action to Child Store'),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SendActionToChildStore()));
+              },
+              child: const Text('Send Action to Child Store'),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => SomeStateFromParentOtherOwned(store: someStateFromParentOtherOwnedStore))); },
-                child: const Text('Some State From Parent Other Owned'),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SomeStateFromParentOtherOwned(
+                            store: someStateFromParentOtherOwnedStore)));
+              },
+              child: const Text('Some State From Parent Other Owned'),
             ),
-          ]
-        )
-      )
-    );
+          ),
+        ])));
   }
 }

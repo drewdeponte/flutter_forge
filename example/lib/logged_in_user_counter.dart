@@ -1,74 +1,69 @@
 library logged_in_user_counter;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_forge/flutter_forge.dart';
-// import 'package:flutter_riverpod_composable_arch/some_state_from_parent_other_owned.dart';
 
+// Environment
+class LoggedInUserCounterEnvironment {}
+
+// State
 @immutable
 class LoggedInUserCounterState {
-  const LoggedInUserCounterState({required this.isLoggedIn, required this.count});
+  const LoggedInUserCounterState(
+      {required this.isLoggedIn, required this.count});
   final bool isLoggedIn;
   final int count;
 }
 
-
-// enum LoggedInUserCounterAction {
-//   foo = 1,
-//   bar = 2,
-//   car = 3
-// }
-
+// Actions
 class LoggedInUserCounterAction {
-  static LoggedInUserCounterState increment(Ref ref, LoggedInUserCounterState  state) {
-    return LoggedInUserCounterState(isLoggedIn: state.isLoggedIn, count: state.count + 1);
+  static ActionTuple<LoggedInUserCounterState, LoggedInUserCounterEnvironment>
+      increment(LoggedInUserCounterState state) {
+    return ActionTuple(
+        LoggedInUserCounterState(
+            isLoggedIn: state.isLoggedIn, count: state.count + 1),
+        null);
   }
 
-  static LoggedInUserCounterState toggleIsLoggedIn(Ref ref, LoggedInUserCounterState state) {
-    return LoggedInUserCounterState(isLoggedIn: !state.isLoggedIn, count: state.count);
+  static ActionTuple<LoggedInUserCounterState, LoggedInUserCounterEnvironment>
+      toggleIsLoggedIn(LoggedInUserCounterState state) {
+    return ActionTuple(
+        LoggedInUserCounterState(
+            isLoggedIn: !state.isLoggedIn, count: state.count),
+        null);
   }
 
-  static LoggedInUserCounterState foo(Ref ref, LoggedInUserCounterState state) {
-    return LoggedInUserCounterState(isLoggedIn: state.isLoggedIn, count: state.count);
+  static ActionTuple<LoggedInUserCounterState, LoggedInUserCounterEnvironment>
+      foo(LoggedInUserCounterState state) {
+    return ActionTuple(
+        LoggedInUserCounterState(
+            isLoggedIn: state.isLoggedIn, count: state.count),
+        null);
   }
 }
-
-// enum LoggedInUserCounterAction {
-//   incrementCount(int),
-//   toggleIsLoggedIn()
-// }
-
-// LoggedInUserCounterState reducer(LoggedInUserCounterState state) {
-//   switch state {
-//     case incrementCount(by):
-//       return LoggedInUserCounterState(isLoggedIn: state.isLoggedIn, count: state.count + by);
-//     case toggleIsLoggedIn:
-//       return LoggedInUserCounterState(isLoggedIn: !state.isLoggedIn, count: state.count);
-//   }
-// }
-
-// Reducer Action
-// LoggedInUserCounterState increment(Ref ref, LoggedInUserCounterState  state) {
-//   return LoggedInUserCounterState(isLoggedIn: state.isLoggedIn, count: state.count + 1);
-// }
 
 // Widget
 class LoggedInUserCounter extends StatelessWidget {
   const LoggedInUserCounter({super.key, required this.store});
-  final StoreInterface<LoggedInUserCounterState> store;
+  final StoreInterface<LoggedInUserCounterState, LoggedInUserCounterEnvironment>
+      store;
 
   @override
   Widget build(BuildContext context) {
     return store.viewBuilder((state, viewStore) {
       return Column(children: [
         Text('isLoggedIn: ${state.isLoggedIn}'),
-        Text('${state.count}', style: Theme.of(context).textTheme.headline4,),
+        Text(
+          '${state.count}',
+          style: Theme.of(context).textTheme.headline4,
+        ),
         OutlinedButton(
-          onPressed: () => viewStore.send(LoggedInUserCounterAction.increment),
-          child: const Text("increment")),
+            onPressed: () =>
+                viewStore.send(LoggedInUserCounterAction.increment),
+            child: const Text("increment")),
         OutlinedButton(
-          onPressed: () => viewStore.send(LoggedInUserCounterAction.foo),
-          child: const Text("foo"))
+            onPressed: () => viewStore.send(LoggedInUserCounterAction.foo),
+            child: const Text("foo"))
       ]);
     });
   }

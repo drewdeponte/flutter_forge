@@ -1,3 +1,3 @@
 import 'view_store_provider.dart';
 
-typedef ViewStoreProviderBuilder<State> = ViewStoreProvider<State> Function(State);
+typedef ViewStoreProviderBuilder<S, E> = ViewStoreProvider<S, E> Function(S, E);
