@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_forge/flutter_forge.dart';
+import 'package:flutter_riverpod_composable_arch/load_on_component_init.dart';
 
 import 'compose_with_parent_owning_state.dart';
 import 'compose_component_owning_state.dart';
 import 'send_action_to_child_store.dart';
-import 'some_state_from_parent_other_owned.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -29,10 +29,6 @@ class MyApp extends StatelessWidget {
 final composeComponentOwningStateStore = Store(
     initialState: ComposeComponentOwningStateState("hello"),
     environment: ComposeComponentOwningStateEnvironment());
-
-final someStateFromParentOtherOwnedStore = Store(
-    initialState: const SomeStateFromParentOtherOwnedState(count: 0),
-    environment: SomeStateFromParentOtherOwnedEnvironment());
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -89,10 +85,10 @@ class Home extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SomeStateFromParentOtherOwned(
-                            store: someStateFromParentOtherOwnedStore)));
+                        builder: (context) =>
+                            LoadOnInitComponentWidget.selfContained()));
               },
-              child: const Text('Some State From Parent Other Owned'),
+              child: const Text('Load On Init Component'),
             ),
           ),
         ])));

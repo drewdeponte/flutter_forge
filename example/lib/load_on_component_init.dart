@@ -28,6 +28,13 @@ class LoadOnInitComponentWidget extends ComponentWidget<
     LoadOnInitComponentState, LoadOnInitComponentEnvironment> {
   LoadOnInitComponentWidget({super.key, required super.store});
 
+  factory LoadOnInitComponentWidget.selfContained() {
+    return LoadOnInitComponentWidget(
+        store: Store(
+            initialState: const LoadOnInitComponentState(count: 0),
+            environment: LoadOnInitComponentEnvironment()));
+  }
+
   @override
   void initState(viewStore) {
     viewStore.send(LoadOnInitCompnoentAction.load);
