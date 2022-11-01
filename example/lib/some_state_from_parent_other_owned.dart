@@ -50,7 +50,7 @@ class SomeStateFromParentOtherOwned extends ComponentWidget<
   SomeStateFromParentOtherOwned({super.key, required super.store});
 
   @override
-  Widget buildView(context, ref, state, viewStore) {
+  Widget build(context, state, viewStore) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Compose with Parent Owning State'),
@@ -71,16 +71,16 @@ class SomeStateFromParentOtherOwned extends ComponentWidget<
                             SomeStateFromParentOtherOwnedAction.incrementCount);
                       } else if (action ==
                           LoggedInUserCounterAction.toggleIsLoggedIn) {
-                        _appStore
-                            .viewStore(ref)
-                            .send(AppAction.toggleIsLoggedIn);
+                        // _appStore
+                        //     .viewStore(ref)
+                        //     .send(AppAction.toggleIsLoggedIn);
                       } else if (action == LoggedInUserCounterAction.foo) {
                         // intentionally swallow an action
                       }
                     })),
             ElevatedButton(
                 onPressed: () {
-                  _appStore.viewStore(ref).send(AppAction.toggleIsLoggedIn);
+                  // _appStore.viewStore(ref).send(AppAction.toggleIsLoggedIn);
                 },
                 child: const Text('Toggle isLoggedIn'))
           ],

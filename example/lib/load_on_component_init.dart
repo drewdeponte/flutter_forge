@@ -24,31 +24,18 @@ class LoadOnInitCompnoentAction {
 }
 
 // Stateful Widget
-class LoadOnInitComponentWidget extends ComponentStatefulWidget<
+class LoadOnInitComponentWidget extends ComponentWidget<
     LoadOnInitComponentState, LoadOnInitComponentEnvironment> {
   LoadOnInitComponentWidget({super.key, required super.store});
 
   @override
-  // ignore: no_logic_in_create_state
-  LoadOnInitComponentWidgetState createState() =>
-      // ignore: no_logic_in_create_state
-      LoadOnInitComponentWidgetState(store: store);
-}
-
-class LoadOnInitComponentWidgetState extends ComponentStatefulWidgetState<
-    LoadOnInitComponentState,
-    LoadOnInitComponentEnvironment,
-    LoadOnInitComponentWidget> {
-  LoadOnInitComponentWidgetState({required super.store});
-  @override
-  void initState() {
-    super.initState();
-    // "ref" can be used in all life-cycles of a StatefulWidget.
-    store.viewStore(ref).send(LoadOnInitCompnoentAction.load);
+  void initState(viewStore) {
+    viewStore.send(LoadOnInitCompnoentAction.load);
+    super.initState(viewStore);
   }
 
   @override
-  Widget buildView(context, ref, state, viewStore) {
+  Widget build(context, state, viewStore) {
     return Column(children: [
       Text(
         '${state.count}',

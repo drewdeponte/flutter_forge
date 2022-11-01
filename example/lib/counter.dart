@@ -25,8 +25,15 @@ class CounterAction {
 class Counter extends ComponentWidget<CounterState, CounterEnvironment> {
   Counter({super.key, required super.store});
 
+  factory Counter.selfContained() {
+    return Counter(
+        store: Store(
+            initialState: const CounterState(count: 0),
+            environment: CounterEnvironment()));
+  }
+
   @override
-  Widget buildView(context, ref, state, viewStore) {
+  Widget build(context, state, viewStore) {
     return Column(children: [
       Text(
         '${state.count}',
