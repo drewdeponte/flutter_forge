@@ -42,9 +42,9 @@ EffectTask<S, E> Function(EffectTask<CS, CE>) pullbackEffectTask<S, E, CS, CE>(
     required EnvironmentScoper<E, CE> environmentScoper,
     required StatePullbacker<CS, S> statePullback}) {
   return (EffectTask<CS, CE> effectTask) {
-    return (parentEnvironment) async {
-      final optionalChildAction =
-          await effectTask(environmentScoper(parentEnvironment));
+    return (parentState, parentEnvironment) async {
+      final optionalChildAction = await effectTask(
+          stateScoper(parentState), environmentScoper(parentEnvironment));
       return mapReducerAction(
           optionalChildAction,
           pullbackAction(
