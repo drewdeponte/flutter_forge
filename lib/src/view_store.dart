@@ -54,10 +54,12 @@ class ViewStore<S, E> extends StateNotifier<S>
       state = reducerTuple.state;
       try {
         if (reducerTuple.effectTask != null) {
-          final optionalAction = await reducerTuple.effectTask!(environment);
-          if (optionalAction != null) {
-            send(optionalAction);
-          }
+          // final optionalAction = await reducerTuple.effectTask!(state, environment);
+          reducerTuple.effectTask!(state, environment).then((optionalAction) {
+            if (optionalAction != null) {
+              send(optionalAction);
+            }
+          });
         }
       } catch (error) {
         // TODO: add some sort of hook for logging here
