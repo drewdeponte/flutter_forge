@@ -10,6 +10,7 @@ abstract class ComponentWidget<S, E> extends ConsumerStatefulWidget {
 
   void initState(ViewStoreInterface<S, E> viewStore) {}
   void postInitState(ViewStoreInterface<S, E> viewStore) {}
+  void dispose(ViewStoreInterface<S, E> viewStore) {}
 
   Widget build(
       BuildContext context, S state, ViewStoreInterface<S, E> viewStore);
@@ -38,5 +39,11 @@ class _ComponentState<S, E> extends ConsumerState<ComponentWidget> {
   Widget build(BuildContext context) {
     final state = ref.watch(store.provider);
     return widget.build(context, state, store.viewStore(ref));
+  }
+
+  @override
+  void dispose() {
+    widget.dispose(store.viewStore(ref));
+    super.dispose();
   }
 }
