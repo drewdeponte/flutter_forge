@@ -9,6 +9,7 @@ abstract class ComponentWidget<S, E> extends ConsumerStatefulWidget {
   final StoreInterface<S, E> store;
 
   void initState(ViewStoreInterface<S, E> viewStore) {}
+  void postInitState(ViewStoreInterface<S, E> viewStore) {}
 
   Widget build(
       BuildContext context, S state, ViewStoreInterface<S, E> viewStore);
@@ -26,8 +27,11 @@ class _ComponentState<S, E> extends ConsumerState<ComponentWidget> {
 
   @override
   void initState() {
-    widget.initState(store.viewStore(ref));
     super.initState();
+    widget.initState(store.viewStore(ref));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.postInitState(store.viewStore(ref));
+    });
   }
 
   @override

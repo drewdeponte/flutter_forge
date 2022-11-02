@@ -53,19 +53,8 @@ class LoadOnInitComponentWidget extends ComponentWidget<
   }
 
   @override
-  void initState(viewStore) {
-    // TODO: figure out why this is needed, figure out if there is a better way to handle this
-    // viewStore.send(LoadOnInitCompnoentAction.load);
-    //
-    // The above will cause an exception if it isn't wrapped in a Future.delayed(Duration.zero like below. I found this Future.delayed thing at the following.
-    // https://www.fluttercampus.com/guide/230/setstate-or-markneedsbuild-called-during-build/
-    //
-    // Maybe this is an acceptable solution and we should just bake it into the ComponentWidget initState proxy so that users don't have to think/worry about it
-    //
-    // Note: I have tried doing it without the Future.delayed both before and after the super.initState() with no difference, it still blows up.
-    Future.delayed(
-        Duration.zero, () => viewStore.send(LoadOnInitCompnoentAction.load));
-    super.initState(viewStore);
+  void postInitState(viewStore) {
+    viewStore.send(LoadOnInitCompnoentAction.load);
   }
 
   @override
