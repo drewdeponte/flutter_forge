@@ -35,10 +35,4 @@ class _ComponentState<S, E> extends ConsumerState<ComponentWidget> {
     final state = ref.watch(store.provider);
     return widget.build(context, state, store.viewStore(ref));
   }
-
-  @override
-  void dispose() {
-    print("DREW: about to dispose component widget");
-    super.dispose();
-  }
 }
