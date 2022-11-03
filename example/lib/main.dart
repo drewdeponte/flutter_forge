@@ -5,7 +5,6 @@ import 'package:flutter_forge/flutter_forge.dart';
 import 'compose_with_parent_owning_state.dart'
     as compose_with_parent_owning_state;
 import 'compose_component_owning_state.dart' as compose_component_owning_state;
-import 'send_action_to_child_store.dart' as send_action_to_child_store;
 import 'load_on_component_init.dart' as load_on_component_init;
 
 void main() {
@@ -66,19 +65,6 @@ class Home extends StatelessWidget {
                             .ComposeWithParentOwningState.selfContained()));
               },
               child: const Text('Compose with Parent Owning State'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const send_action_to_child_store
-                            .SendActionToChildStore()));
-              },
-              child: const Text('Send Action to Child Store'),
             ),
           ),
           Padding(
