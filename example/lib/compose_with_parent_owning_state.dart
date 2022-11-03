@@ -26,14 +26,14 @@ class Action {
 
 // Widget
 class ComposeWithParentOwningState extends ComponentWidget<State, Environment> {
-  ComposeWithParentOwningState({super.key, required super.store});
-
-  factory ComposeWithParentOwningState.selfContained() {
-    return ComposeWithParentOwningState(
-        store: Store(
-            initialState: const State(counterState: counter.State(count: 10)),
-            environment: Environment()));
-  }
+  ComposeWithParentOwningState(
+      {super.key, StoreInterface<State, Environment>? store})
+      : super(
+            store: store ??
+                Store(
+                    initialState:
+                        const State(counterState: counter.State(count: 10)),
+                    environment: Environment()));
 
   @override
   Widget build(context, state, viewStore) {

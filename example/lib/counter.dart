@@ -22,13 +22,12 @@ class Action {
 
 // Widget
 class Counter extends ComponentWidget<State, Environment> {
-  Counter({super.key, required super.store});
-
-  factory Counter.selfContained() {
-    return Counter(
-        store: Store(
-            initialState: const State(count: 0), environment: Environment()));
-  }
+  Counter({super.key, StoreInterface<State, Environment>? store})
+      : super(
+            store: store ??
+                Store(
+                    initialState: const State(count: 0),
+                    environment: Environment()));
 
   @override
   Widget build(context, state, viewStore) {

@@ -62,7 +62,7 @@ class Home extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => compose_with_parent_owning_state
-                            .ComposeWithParentOwningState.selfContained()));
+                            .ComposeWithParentOwningState()));
               },
               child: const Text('Compose with Parent Owning State'),
             ),
@@ -75,7 +75,7 @@ class Home extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => load_on_component_init
-                            .LoadOnInitComponentWidget.selfContained()));
+                            .LoadOnInitComponentWidget()));
               },
               child: const Text('Load On Init Component'),
             ),

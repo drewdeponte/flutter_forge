@@ -36,14 +36,13 @@ class Action {
 
 // Stateful Widget
 class LoadOnInitComponentWidget extends ComponentWidget<State, Environment> {
-  LoadOnInitComponentWidget({super.key, required super.store});
-
-  factory LoadOnInitComponentWidget.selfContained() {
-    return LoadOnInitComponentWidget(
-        store: Store(
-            initialState: const State(count: 0, name: "Initial"),
-            environment: Environment()));
-  }
+  LoadOnInitComponentWidget(
+      {super.key, StoreInterface<State, Environment>? store})
+      : super(
+            store: store ??
+                Store(
+                    initialState: const State(count: 0, name: "Initial"),
+                    environment: Environment()));
 
   @override
   void postInitState(viewStore) {

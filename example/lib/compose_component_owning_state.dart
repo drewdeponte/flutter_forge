@@ -32,7 +32,7 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(state.name),
-            counter.Counter.selfContained(),
+            counter.Counter(),
             TextButton(
                 onPressed: () => viewStore.send(Action.appendYourMom),
                 child: const Text("parent append your mom to name"))
