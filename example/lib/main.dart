@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_forge/flutter_forge.dart';
-import 'package:flutter_riverpod_composable_arch/load_on_component_init.dart';
 
-import 'compose_with_parent_owning_state.dart';
-import 'compose_component_owning_state.dart';
-import 'send_action_to_child_store.dart';
+import 'compose_with_parent_owning_state.dart'
+    as compose_with_parent_owning_state;
+import 'compose_component_owning_state.dart' as compose_component_owning_state;
+import 'send_action_to_child_store.dart' as send_action_to_child_store;
+import 'load_on_component_init.dart' as load_on_component_init;
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Forge Example',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -27,8 +28,8 @@ class MyApp extends StatelessWidget {
 }
 
 final composeComponentOwningStateStore = Store(
-    initialState: ComposeComponentOwningStateState("hello"),
-    environment: ComposeComponentOwningStateEnvironment());
+    initialState: compose_component_owning_state.State("hello"),
+    environment: compose_component_owning_state.Environment());
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -36,7 +37,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Riverpod Composable Arch Examples')),
+        appBar: AppBar(title: const Text('Flutter Forge Examples')),
         body: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -47,8 +48,9 @@ class Home extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ComposeComponentOwningState(
-                            store: composeComponentOwningStateStore)));
+                        builder: (context) => compose_component_owning_state
+                            .ComposeComponentOwningState(
+                                store: composeComponentOwningStateStore)));
               },
               child: const Text('Compose with Component Owning State'),
             ),
@@ -60,8 +62,8 @@ class Home extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            ComposeWithParentOwningState.selfContained()));
+                        builder: (context) => compose_with_parent_owning_state
+                            .ComposeWithParentOwningState.selfContained()));
               },
               child: const Text('Compose with Parent Owning State'),
             ),
@@ -73,7 +75,8 @@ class Home extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SendActionToChildStore()));
+                        builder: (context) => const send_action_to_child_store
+                            .SendActionToChildStore()));
               },
               child: const Text('Send Action to Child Store'),
             ),
@@ -85,8 +88,8 @@ class Home extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            LoadOnInitComponentWidget.selfContained()));
+                        builder: (context) => load_on_component_init
+                            .LoadOnInitComponentWidget.selfContained()));
               },
               child: const Text('Load On Init Component'),
             ),

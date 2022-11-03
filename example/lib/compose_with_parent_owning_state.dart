@@ -1,42 +1,38 @@
+library compose_with_parent_owning_state;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 
-import 'counter.dart';
+import 'counter.dart' as counter;
 
 // Environment
-class ComposeWithParentOwningStateEnvironment {}
+class Environment {}
 
 // State
 @immutable
-class ComposeWithParentOwningStateState {
-  const ComposeWithParentOwningStateState({required this.counter});
-  final CounterState counter;
+class State {
+  const State({required this.counterState});
+  final counter.State counterState;
 }
 
 // Actions
-class ComposeWithParentOwningStateAction {
-  static ActionTuple<ComposeWithParentOwningStateState,
-          ComposeWithParentOwningStateEnvironment>
-      incrementCounter(ComposeWithParentOwningStateState state) {
+class Action {
+  static ActionTuple<State, Environment> incrementCounter(State state) {
     return ActionTuple(
-        ComposeWithParentOwningStateState(
-            counter: CounterState(count: state.counter.count + 1)),
+        State(counterState: counter.State(count: state.counterState.count + 1)),
         null);
   }
 }
 
 // Widget
-class ComposeWithParentOwningState extends ComponentWidget<
-    ComposeWithParentOwningStateState,
-    ComposeWithParentOwningStateEnvironment> {
+class ComposeWithParentOwningState extends ComponentWidget<State, Environment> {
   ComposeWithParentOwningState({super.key, required super.store});
 
   factory ComposeWithParentOwningState.selfContained() {
     return ComposeWithParentOwningState(
         store: Store(
-            initialState: const ComposeWithParentOwningStateState(
-                counter: CounterState(count: 10)),
-            environment: ComposeWithParentOwningStateEnvironment()));
+            initialState: const State(counterState: counter.State(count: 10)),
+            environment: Environment()));
   }
 
   @override
@@ -49,22 +45,17 @@ class ComposeWithParentOwningState extends ComponentWidget<
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Counter(
+            counter.Counter(
                 store: store.scope(
-                    toChildState: (state) => state.counter,
-                    fromChildAction: pullbackAction<
-                            ComposeWithParentOwningStateState,
-                            ComposeWithParentOwningStateEnvironment,
-                            CounterState,
-                            CounterEnvironment>(
-                        stateScoper: (parentState) => parentState.counter,
-                        environmentScoper: (_) => CounterEnvironment(),
+                    toChildState: (state) => state.counterState,
+                    fromChildAction: pullbackAction<State, Environment,
+                            counter.State, counter.Environment>(
+                        stateScoper: (parentState) => parentState.counterState,
+                        environmentScoper: (_) => counter.Environment(),
                         statePullback: (childState) =>
-                            ComposeWithParentOwningStateState(
-                                counter: childState)))),
+                            State(counterState: childState)))),
             TextButton(
-                onPressed: () => viewStore
-                    .send(ComposeWithParentOwningStateAction.incrementCounter),
+                onPressed: () => viewStore.send(Action.incrementCounter),
                 child: const Text("parent increment counter"))
           ],
         ),

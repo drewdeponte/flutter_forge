@@ -4,32 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 
 // Environment
-class CounterEnvironment {}
+class Environment {}
 
 // State
 @immutable
-class CounterState {
-  const CounterState({required this.count});
+class State {
+  const State({required this.count});
   final int count;
 }
 
 // Actions
-class CounterAction {
-  static ActionTuple<CounterState, CounterEnvironment> increment(
-      CounterState state) {
-    return ActionTuple(CounterState(count: state.count + 1), null);
+class Action {
+  static ActionTuple<State, Environment> increment(State state) {
+    return ActionTuple(State(count: state.count + 1), null);
   }
 }
 
 // Widget
-class Counter extends ComponentWidget<CounterState, CounterEnvironment> {
+class Counter extends ComponentWidget<State, Environment> {
   Counter({super.key, required super.store});
 
   factory Counter.selfContained() {
     return Counter(
         store: Store(
-            initialState: const CounterState(count: 0),
-            environment: CounterEnvironment()));
+            initialState: const State(count: 0), environment: Environment()));
   }
 
   @override
@@ -40,7 +38,7 @@ class Counter extends ComponentWidget<CounterState, CounterEnvironment> {
         style: Theme.of(context).textTheme.headline4,
       ),
       OutlinedButton(
-          onPressed: () => viewStore.send(CounterAction.increment),
+          onPressed: () => viewStore.send(Action.increment),
           child: const Text("increment"))
     ]);
   }

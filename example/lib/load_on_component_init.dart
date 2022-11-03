@@ -1,60 +1,53 @@
+library load_on_component_init;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 
 // State definition
 @immutable
-class LoadOnInitComponentState {
-  const LoadOnInitComponentState({required this.count, required this.name});
+class State {
+  const State({required this.count, required this.name});
   final int count;
   final String name;
 }
 
-class LoadOnInitComponentEnvironment {}
+class Environment {}
 
 // Reducer Action
-class LoadOnInitCompnoentAction {
-  static ActionTuple<LoadOnInitComponentState, LoadOnInitComponentEnvironment>
-      load(LoadOnInitComponentState state) {
-    return ActionTuple(
-        LoadOnInitComponentState(count: state.count, name: "Loading..."),
+class Action {
+  static ActionTuple<State, Environment> load(State state) {
+    return ActionTuple(State(count: state.count, name: "Loading..."),
         (state, environment) {
       return Future.delayed(const Duration(seconds: 5), () {})
-          .then((_) => LoadOnInitCompnoentAction.setName("The Loaded Name"));
+          .then((_) => Action.setName("The Loaded Name"));
     });
   }
 
-  static ReducerAction<LoadOnInitComponentState, LoadOnInitComponentEnvironment>
-      setName(String name) {
+  static ReducerAction<State, Environment> setName(String name) {
     return (state) {
-      return ActionTuple(
-          LoadOnInitComponentState(name: name, count: state.count), null);
+      return ActionTuple(State(name: name, count: state.count), null);
     };
   }
 
-  static ActionTuple<LoadOnInitComponentState, LoadOnInitComponentEnvironment>
-      increment(LoadOnInitComponentState state) {
-    return ActionTuple(
-        LoadOnInitComponentState(count: state.count + 1, name: state.name),
-        null);
+  static ActionTuple<State, Environment> increment(State state) {
+    return ActionTuple(State(count: state.count + 1, name: state.name), null);
   }
 }
 
 // Stateful Widget
-class LoadOnInitComponentWidget extends ComponentWidget<
-    LoadOnInitComponentState, LoadOnInitComponentEnvironment> {
+class LoadOnInitComponentWidget extends ComponentWidget<State, Environment> {
   LoadOnInitComponentWidget({super.key, required super.store});
 
   factory LoadOnInitComponentWidget.selfContained() {
     return LoadOnInitComponentWidget(
         store: Store(
-            initialState:
-                const LoadOnInitComponentState(count: 0, name: "Initial"),
-            environment: LoadOnInitComponentEnvironment()));
+            initialState: const State(count: 0, name: "Initial"),
+            environment: Environment()));
   }
 
   @override
   void postInitState(viewStore) {
-    viewStore.send(LoadOnInitCompnoentAction.load);
+    viewStore.send(Action.load);
   }
 
   @override
@@ -74,8 +67,7 @@ class LoadOnInitComponentWidget extends ComponentWidget<
                 style: Theme.of(context).textTheme.headline4,
               ),
               OutlinedButton(
-                  onPressed: () =>
-                      viewStore.send(LoadOnInitCompnoentAction.increment),
+                  onPressed: () => viewStore.send(Action.increment),
                   child: const Text("increment"))
             ])
           ],

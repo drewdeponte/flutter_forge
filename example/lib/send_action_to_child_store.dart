@@ -1,12 +1,14 @@
+library send_action_to_child_store;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 
-import 'counter.dart';
+import 'counter.dart' as counter;
 
 final _sendActionToChildStoreStore = Store(
-    initialState: const CounterState(count: 100),
-    environment: CounterEnvironment());
+    initialState: const counter.State(count: 100),
+    environment: counter.Environment());
 
 // Widget
 class SendActionToChildStore extends ConsumerWidget {
@@ -22,17 +24,17 @@ class SendActionToChildStore extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Counter(store: _sendActionToChildStoreStore),
+            counter.Counter(store: _sendActionToChildStoreStore),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _sendActionToChildStoreStore
             .viewStore(ref)
-            .send(CounterAction.increment),
+            .send(counter.Action.increment),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

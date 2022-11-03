@@ -1,26 +1,24 @@
+library compose_component_owning_state;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 
-import 'counter.dart';
+import 'counter.dart' as counter;
 
-class ComposeComponentOwningStateEnvironment {}
+class Environment {}
 
-class ComposeComponentOwningStateState {
-  ComposeComponentOwningStateState(this.name);
+class State {
+  State(this.name);
   String name;
 }
 
-class ComposeComponentOwningStateAction {
-  static ActionTuple<ComposeComponentOwningStateState,
-          ComposeComponentOwningStateEnvironment>
-      appendYourMom(ComposeComponentOwningStateState state) {
-    return ActionTuple(
-        ComposeComponentOwningStateState("${state.name} your mom"), null);
+class Action {
+  static ActionTuple<State, Environment> appendYourMom(State state) {
+    return ActionTuple(State("${state.name} your mom"), null);
   }
 }
 
-class ComposeComponentOwningState extends ComponentWidget<
-    ComposeComponentOwningStateState, ComposeComponentOwningStateEnvironment> {
+class ComposeComponentOwningState extends ComponentWidget<State, Environment> {
   ComposeComponentOwningState({super.key, required super.store});
 
   @override
@@ -34,10 +32,9 @@ class ComposeComponentOwningState extends ComponentWidget<
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(state.name),
-            Counter.selfContained(),
+            counter.Counter.selfContained(),
             TextButton(
-                onPressed: () => viewStore
-                    .send(ComposeComponentOwningStateAction.appendYourMom),
+                onPressed: () => viewStore.send(Action.appendYourMom),
                 child: const Text("parent append your mom to name"))
           ],
         ),
