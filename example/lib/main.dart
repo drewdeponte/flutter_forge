@@ -6,6 +6,7 @@ import 'compose_with_parent_owning_state.dart'
     as compose_with_parent_owning_state;
 import 'compose_component_owning_state.dart' as compose_component_owning_state;
 import 'load_on_component_init.dart' as load_on_component_init;
+import 'override_ui.dart' as override_ui;
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
 final composeComponentOwningStateStore = Store(
     initialState: compose_component_owning_state.State("hello"),
     environment: compose_component_owning_state.Environment());
+final overrideUiStore = Store(
+    initialState: override_ui.State('override ui'),
+    environment: override_ui.Environment());
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -78,6 +82,20 @@ class Home extends StatelessWidget {
                             .LoadOnInitComponentWidget()));
               },
               child: const Text('Load On Init Component'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => override_ui
+                            .OverrideUiComponent(
+                                store: overrideUiStore)));
+              },
+              child: const Text('Override UI keeping business logic'),
             ),
           ),
         ])));
