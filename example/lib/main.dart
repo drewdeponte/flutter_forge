@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_forge/flutter_forge.dart';
+import 'package:flutter_riverpod_composable_arch/trigger_nav_by_child_component.dart';
 
 import 'compose_with_parent_owning_state.dart'
     as compose_with_parent_owning_state;
@@ -91,11 +92,23 @@ class Home extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => override_ui
-                            .OverrideUiComponent(
-                                store: overrideUiStore)));
+                        builder: (context) => override_ui.OverrideUiComponent(
+                            store: overrideUiStore)));
               },
               child: const Text('Override UI keeping business logic'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const TriggerNavByChildComponent()));
+              },
+              child: const Text('Trigger Nav by Child Component'),
             ),
           ),
         ])));
