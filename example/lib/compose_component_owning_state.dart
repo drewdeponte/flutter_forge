@@ -14,7 +14,7 @@ class State {
 
 class Action {
   static ActionTuple<State, Environment> appendYourMom(State state) {
-    return ActionTuple(State("${state.name} your mom"), null);
+    return ActionTuple(State("${state.name} your mom"), []);
   }
 }
 

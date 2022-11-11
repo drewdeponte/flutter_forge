@@ -15,12 +15,16 @@ class State {
 
 class Action {
   static ActionTuple<State, Environment> appendYourMom(State state) {
-    return ActionTuple(State("${state.name} your mom"), null);
+    return ActionTuple(State("${state.name} your mom"), []);
   }
 }
 
 class CounterWithOverridenUi extends counter.Counter {
-  CounterWithOverridenUi({super.key, StoreInterface<counter.State, counter.Environment>? store}): super(store: store ?? Store(
+  CounterWithOverridenUi(
+      {super.key, StoreInterface<counter.State, counter.Environment>? store})
+      : super(
+            store: store ??
+                Store(
                     initialState: const counter.State(count: 0),
                     environment: counter.Environment()));
 
@@ -33,7 +37,7 @@ class CounterWithOverridenUi extends counter.Counter {
       ),
       ElevatedButton(
           onPressed: () => viewStore.send(counter.Action.increment),
-        child: const Text("overriden ui - increment"))
+          child: const Text("overriden ui - increment"))
     ]);
   }
 }

@@ -16,7 +16,7 @@ class State {
 // Actions
 class Action {
   static ActionTuple<State, Environment> increment(State state) {
-    return ActionTuple(State(count: state.count + 1), null);
+    return ActionTuple(State(count: state.count + 1), []);
   }
 }
 

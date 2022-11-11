@@ -20,7 +20,7 @@ class Action {
   static ActionTuple<State, Environment> incrementCounter(State state) {
     return ActionTuple(
         State(counterState: counter.State(count: state.counterState.count + 1)),
-        null);
+        []);
   }
 }
 
