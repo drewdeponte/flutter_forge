@@ -13,4 +13,8 @@ class ReducerTuple<S, E> {
       return mapper(this.effectTask!);
     }
   }
+
+  factory ReducerTuple.noop(S state) {
+    return ReducerTuple(state, null);
+  }
 }
