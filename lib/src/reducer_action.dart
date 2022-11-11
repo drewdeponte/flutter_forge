@@ -28,11 +28,12 @@ ReducerAction<S, E> Function(ReducerAction<CS, CE>)
     return (parentState) {
       final childActionTuple = childAction(stateScoper(parentState));
       final newParentState = statePullback(childActionTuple.state);
-      final newParentEffect = childActionTuple.effectTask?.pullback(
-          stateScoper: stateScoper,
-          environmentScoper: environmentScoper,
-          statePullback: statePullback);
-      return ActionTuple(newParentState, newParentEffect);
+      final newParentEffects = childActionTuple.effectTasks.map((effectTask) =>
+          effectTask.pullback(
+              stateScoper: stateScoper,
+              environmentScoper: environmentScoper,
+              statePullback: statePullback));
+      return ActionTuple(newParentState, newParentEffects);
     };
   };
 }

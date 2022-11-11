@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'package:flutter_forge/src/reducer_tuple.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'reducer.dart';
 import 'reducer_action.dart';
@@ -36,8 +35,7 @@ class ViewStore<S, E> extends StateNotifier<S>
       return reducer!;
     } else {
       return (S state, ReducerAction<S, E> action) {
-        final actionTuple = action(state);
-        return ReducerTuple(actionTuple.state, actionTuple.effectTask);
+        return action(state);
       };
     }
   }
@@ -53,16 +51,13 @@ class ViewStore<S, E> extends StateNotifier<S>
       final reducerTuple = _reducer()(state, action);
       state = reducerTuple.state;
       try {
-        if (reducerTuple.effectTask != null) {
-          // final optionalAction = await reducerTuple.effectTask!(state, environment);
-          reducerTuple.effectTask!
-              .run(state, environment)
-              .then((optionalAction) {
+        reducerTuple.effectTasks.forEach((effectTask) {
+          effectTask.run(state, environment).then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }
           });
-        }
+        });
       } catch (error) {
         // TODO: add some sort of hook for logging here
         // Fimber.d('error executing action: $action\nerror: $error');

@@ -1,11 +1,11 @@
 import 'effect_task.dart';
 
 class ReducerTuple<S, E> {
-  ReducerTuple(this.state, this.effectTask);
+  ReducerTuple(this.state, this.effectTasks);
   final S state;
-  final EffectTask<S, E>? effectTask;
+  final Iterable<EffectTask<S, E>> effectTasks;
 
   factory ReducerTuple.noop(S state) {
-    return ReducerTuple(state, null);
+    return ReducerTuple(state, []);
   }
 }
