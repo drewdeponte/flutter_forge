@@ -55,7 +55,9 @@ class ViewStore<S, E> extends StateNotifier<S>
       try {
         if (reducerTuple.effectTask != null) {
           // final optionalAction = await reducerTuple.effectTask!(state, environment);
-          reducerTuple.effectTask!(state, environment).then((optionalAction) {
+          reducerTuple.effectTask!
+              .run(state, environment)
+              .then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }

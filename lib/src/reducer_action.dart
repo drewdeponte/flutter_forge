@@ -28,29 +28,11 @@ ReducerAction<S, E> Function(ReducerAction<CS, CE>)
     return (parentState) {
       final childActionTuple = childAction(stateScoper(parentState));
       final newParentState = statePullback(childActionTuple.state);
-      final newParentEffect = childActionTuple.mapEffectTask(pullbackEffectTask(
+      final newParentEffect = childActionTuple.effectTask?.pullback(
           stateScoper: stateScoper,
           environmentScoper: environmentScoper,
-          statePullback: statePullback));
+          statePullback: statePullback);
       return ActionTuple(newParentState, newParentEffect);
-    };
-  };
-}
-
-EffectTask<S, E> Function(EffectTask<CS, CE>) pullbackEffectTask<S, E, CS, CE>(
-    {required StateScoper<S, CS> stateScoper,
-    required EnvironmentScoper<E, CE> environmentScoper,
-    required StatePullbacker<CS, S> statePullback}) {
-  return (EffectTask<CS, CE> effectTask) {
-    return (parentState, parentEnvironment) async {
-      final optionalChildAction = await effectTask(
-          stateScoper(parentState), environmentScoper(parentEnvironment));
-      return mapReducerAction(
-          optionalChildAction,
-          pullbackAction(
-              stateScoper: stateScoper,
-              environmentScoper: environmentScoper,
-              statePullback: statePullback));
     };
   };
 }

@@ -5,15 +5,6 @@ class ReducerTuple<S, E> {
   final S state;
   final EffectTask<S, E>? effectTask;
 
-  EffectTask<NS, NE>? mapEffectTask<NS, NE>(
-      EffectTask<NS, NE> Function(EffectTask<S, E>) mapper) {
-    if (this.effectTask == null) {
-      return null;
-    } else {
-      return mapper(this.effectTask!);
-    }
-  }
-
   factory ReducerTuple.noop(S state) {
     return ReducerTuple(state, null);
   }
