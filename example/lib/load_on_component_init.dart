@@ -13,14 +13,19 @@ class State {
 
 class Environment {}
 
+// Effect Tasks
+final loadNameEffect = EffectTask((state, environment) {
+  return Future.delayed(const Duration(seconds: 5), () {})
+      .then((_) => Action.setName("The Loaded Name"));
+});
+
 // Reducer Action
 class Action {
   static ActionTuple<State, Environment> load(State state) {
-    return ActionTuple(State(count: state.count, name: "Loading..."),
-        (state, environment) {
-      return Future.delayed(const Duration(seconds: 5), () {})
-          .then((_) => Action.setName("The Loaded Name"));
-    });
+    return ActionTuple(
+      State(count: state.count, name: "Loading..."),
+      loadNameEffect,
+    );
   }
 
   static ReducerAction<State, Environment> setName(String name) {

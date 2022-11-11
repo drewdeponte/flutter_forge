@@ -41,13 +41,13 @@ class TriggerNavByChildComponent extends StatelessWidget {
                     fromChildAction: (childAction) {
                       return (State state) {
                         if (childAction == some_button.Action.buttonPressed) {
-                          return ActionTuple(state, (s, e) async {
+                          return ActionTuple(state, EffectTask((s, e) async {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const AnotherPage()));
                             return null;
-                          });
+                          }));
                         } else {
                           return ActionTuple(state, null);
                         }
