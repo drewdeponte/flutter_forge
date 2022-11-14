@@ -54,7 +54,7 @@ class ViewStore<S, E> extends StateNotifier<S>
       state = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {
-          effectTask.run(state, environment).then((optionalAction) {
+          effectTask.run(state, environment, context()).then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }

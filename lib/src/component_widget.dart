@@ -29,6 +29,7 @@ class _ComponentState<S, E> extends ConsumerState<ComponentWidget> {
   @override
   void initState() {
     super.initState();
+    store.viewStore(ref).setContext(context);
     widget.initState(store.viewStore(ref));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.postInitState(store.viewStore(ref));
