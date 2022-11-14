@@ -19,6 +19,16 @@ typedef StatePullbacker<CS, S> = S Function(CS childState);
 typedef EffectPullbacker<CS, CE, S, E> = EffectTask<S, E> Function(
     EffectTask<CS, CE> childEffect);
 
+ReducerAction<S, E> combineActions<S, E>(
+    ReducerAction<S, E> actionA, ReducerAction<S, E> actionB) {
+  return (state) {
+    final actionATuple = actionA(state);
+    final actionBTuple = actionB(actionATuple.state);
+    return ActionTuple(actionBTuple.state,
+        actionATuple.effectTasks.toList() + actionBTuple.effectTasks.toList());
+  };
+}
+
 ReducerAction<S, E> Function(ReducerAction<CS, CE>)
     pullbackAction<S, E, CS, CE>(
         {required StateScoper<S, CS> stateScoper,
