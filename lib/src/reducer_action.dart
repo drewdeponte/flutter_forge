@@ -47,3 +47,26 @@ ReducerAction<S, E> Function(ReducerAction<CS, CE>)
     };
   };
 }
+
+ReducerAction<S, E> Function(ReducerAction<CS, CE>)
+    pullbackMapAction<S, E, CS, CE>(
+        Map<ReducerAction<CS, CE>, ReducerAction<S, E>> actionMap,
+        {required StateScoper<S, CS> stateScoper,
+        required EnvironmentScoper<E, CE> environmentScoper,
+        required StatePullbacker<CS, S> statePullback}) {
+  return (childAction) {
+    return (state) {
+      // run the child action
+      final pulledBackChildAction = pullbackAction(
+          stateScoper: stateScoper,
+          environmentScoper: environmentScoper,
+          statePullback: statePullback)(childAction);
+      final actionToRun = actionMap[childAction];
+      if (actionToRun != null) {
+        return combineActions(pulledBackChildAction, actionToRun)(state);
+      } else {
+        return pulledBackChildAction(state);
+      }
+    };
+  };
+}
