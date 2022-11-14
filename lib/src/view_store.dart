@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'reducer.dart';
 import 'reducer_action.dart';
@@ -17,6 +18,7 @@ class ViewStore<S, E> extends StateNotifier<S>
   final Reducer<S, E>? reducer;
   final E environment;
   final Queue<ReducerAction<S, E>> actionQueue = Queue();
+  late BuildContext _context;
   bool isSending = false;
 
   @override
@@ -65,6 +67,14 @@ class ViewStore<S, E> extends StateNotifier<S>
     }
 
     isSending = false;
+  }
+
+  void setContext(BuildContext context) {
+    _context = context;
+  }
+
+  BuildContext context() {
+    return _context;
   }
 
   @override

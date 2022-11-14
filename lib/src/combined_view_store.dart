@@ -1,8 +1,12 @@
+import 'package:flutter/widgets.dart';
+
 import 'view_store_interface.dart';
 import 'reducer_action.dart';
 
 class CombinedViewStore<S, E> implements ViewStoreInterface<S, E> {
   CombinedViewStore(this.converter);
+
+  late BuildContext _context;
 
   final Function(ReducerAction<S, E> action) converter;
 
@@ -18,5 +22,13 @@ class CombinedViewStore<S, E> implements ViewStoreInterface<S, E> {
     // }
     // // does this action go to parent A or parent B? how do we know?
     // parentViewStore.send(childToParentAction(action));
+  }
+
+  void setContext(BuildContext context) {
+    _context = context;
+  }
+
+  BuildContext context() {
+    return _context;
   }
 }

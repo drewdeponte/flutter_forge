@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import 'view_store_interface.dart';
 import 'reducer_action.dart';
 
@@ -11,5 +13,13 @@ class ScopedViewStore<S, E, PS, PE> implements ViewStoreInterface<S, E> {
   @override
   void send(ReducerAction<S, E> action) {
     parentViewStore.send(childToParentAction(action));
+  }
+
+  void setContext(BuildContext context) {
+    parentViewStore.setContext(context);
+  }
+
+  BuildContext context() {
+    return parentViewStore.context();
   }
 }
