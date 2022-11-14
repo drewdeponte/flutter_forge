@@ -15,9 +15,28 @@ class State {
   const State();
 }
 
-// Actions
-class Action {}
+// Effects
+class Effects {
+  static final navigateToAnotherPage =
+      EffectTask<State, Environment>((s, e, context) async {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const AnotherPage()));
+    return null;
+  });
+}
 
+// Actions
+class Action {
+  static ActionTuple<State, Environment> buttonPressed(State state) {
+    return ActionTuple(state, [Effects.navigateToAnotherPage]);
+  }
+}
+
+// Note: In a real world application where it isn't 100% flutter forge components up
+// and down the stack, which this layer is representing that boundary as it is just
+// a StatelessWidget, you have to decide if you want your store to be global or if
+// you want it to be created & destroyed with a widget. If the later you should create
+// the store as part of a StatefulWidget
 final triggerNavByChildComponentStore =
     Store(initialState: const State(), environment: Environment());
 
@@ -38,24 +57,13 @@ class TriggerNavByChildComponent extends StatelessWidget {
             SomeButton(
                 store: triggerNavByChildComponentStore.scope(
                     toChildState: (state) => some_button.State(),
-                    fromChildAction: (childAction) {
-                      return (State state) {
-                        if (childAction == some_button.Action.buttonPressed) {
-                          return ActionTuple(state, [
-                            EffectTask((s, e) async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AnotherPage()));
-                              return null;
-                            })
-                          ]);
-                        } else {
-                          return ActionTuple(state, []);
-                        }
-                      };
-                    }))
+                    fromChildAction: pullbackMapAction({
+                      some_button.Action.buttonPressed: Action.buttonPressed
+                    },
+                        stateScoper: (state) => some_button.State(),
+                        environmentScoper: (environment) =>
+                            some_button.Environment(),
+                        statePullback: (childState) => const State())))
           ],
         ),
       ),
