@@ -41,7 +41,7 @@ class ViewStore<S, E, A extends ReducerAction> extends StateNotifier<S>
       // TODO: add some sort of hook for logging here
       // Fimber.d('send($action): begin:');
 
-      final reducerTuple = reducer(state, action);
+      final reducerTuple = reducer.run(state, action);
       state = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {

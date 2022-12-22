@@ -32,15 +32,15 @@ abstract class TriggerNavByChildComponentAction implements ReducerAction {}
 class ButtonPressed implements TriggerNavByChildComponentAction {}
 
 // Reducer
-ReducerTuple<State, Environment, TriggerNavByChildComponentAction>
-    triggerNavByChildComponentReducer(
-        State state, TriggerNavByChildComponentAction action) {
+final triggerNavByChildComponentReducer =
+    Reducer<State, Environment, TriggerNavByChildComponentAction>(
+        (State state, TriggerNavByChildComponentAction action) {
   if (action is ButtonPressed) {
     return ReducerTuple(state, [Effects.navigateToAnotherPage]);
   } else {
     return ReducerTuple(state, []);
   }
-}
+});
 
 // Note: In a real world application where it isn't 100% flutter forge components up
 // and down the stack, which this layer is representing that boundary as it is just

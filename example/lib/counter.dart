@@ -19,14 +19,14 @@ abstract class CounterAction implements ReducerAction {}
 class IncrementCounterByOne implements CounterAction {}
 
 // Reducer
-ReducerTuple<State, Environment, CounterAction> counterReducer(
-    State state, CounterAction action) {
+final counterReducer = Reducer<State, Environment, CounterAction>(
+    (State state, CounterAction action) {
   if (action is IncrementCounterByOne) {
     return ReducerTuple(State(count: state.count + 1), []);
   } else {
     return ReducerTuple(state, []);
   }
-}
+});
 
 // Widget
 class Counter extends ComponentWidget<State, CounterAction> {

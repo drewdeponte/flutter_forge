@@ -46,14 +46,14 @@ abstract class OverrideUiAction implements ReducerAction {}
 class AppendYourMom implements OverrideUiAction {}
 
 // Reducer
-ReducerTuple<State, Environment, OverrideUiAction> overrideUiReducer(
-    State state, OverrideUiAction action) {
+final overrideUiReducer = Reducer<State, Environment, OverrideUiAction>(
+    (State state, OverrideUiAction action) {
   if (action is AppendYourMom) {
     return ReducerTuple(State("${state.name} your mom"), []);
   } else {
     return ReducerTuple(state, []);
   }
-}
+});
 
 // Component housing the component with overriden ui
 class OverrideUiComponent extends ComponentWidget<State, OverrideUiAction> {

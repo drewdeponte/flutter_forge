@@ -16,10 +16,10 @@ abstract class SomeButtonAction implements ReducerAction {}
 class ButtonPressed implements SomeButtonAction {}
 
 // Reducer
-ReducerTuple<State, Environment, SomeButtonAction> someButtonReducer(
-    State state, SomeButtonAction action) {
+final someButtonReducer = Reducer<State, Environment, SomeButtonAction>(
+    (State state, SomeButtonAction action) {
   return ReducerTuple(state, []);
-}
+});
 
 // Widget
 class SomeButton extends ComponentWidget<State, SomeButtonAction> {

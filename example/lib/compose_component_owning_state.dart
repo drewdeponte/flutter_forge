@@ -16,15 +16,15 @@ abstract class ComposeComponentOwningStateAction implements ReducerAction {}
 
 class AppendYourMom implements ComposeComponentOwningStateAction {}
 
-ReducerTuple<State, Environment, ComposeComponentOwningStateAction>
-    composeComponentOwningStateReducer(
-        State state, ComposeComponentOwningStateAction action) {
+final composeComponentOwningStateReducer =
+    Reducer<State, Environment, ComposeComponentOwningStateAction>(
+        (State state, ComposeComponentOwningStateAction action) {
   if (action is AppendYourMom) {
     return ReducerTuple(State("${state.name} your mom"), []);
   } else {
     return ReducerTuple(state, []);
   }
-}
+});
 
 class ComposeComponentOwningState
     extends ComponentWidget<State, ComposeComponentOwningStateAction> {

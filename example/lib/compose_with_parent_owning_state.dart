@@ -21,9 +21,9 @@ abstract class ComposeWithParentOwningStateAction implements ReducerAction {}
 class IncrementCounter implements ComposeWithParentOwningStateAction {}
 
 // Reducer
-ReducerTuple<State, Environment, ComposeWithParentOwningStateAction>
-    composeWithParentOwningStateReducer(
-        State state, ComposeWithParentOwningStateAction action) {
+final composeWithParentOwningStateReducer =
+    Reducer<State, Environment, ComposeWithParentOwningStateAction>(
+        (State state, ComposeWithParentOwningStateAction action) {
   if (action is IncrementCounter) {
     return ReducerTuple(
         State(counterState: counter.State(count: state.counterState.count + 1)),
@@ -31,7 +31,7 @@ ReducerTuple<State, Environment, ComposeWithParentOwningStateAction>
   } else {
     return ReducerTuple(State(counterState: state.counterState), []);
   }
-}
+});
 
 // Widget
 class ComposeWithParentOwningState

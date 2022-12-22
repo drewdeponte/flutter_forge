@@ -34,8 +34,9 @@ class SetName implements LoadOnComponentInitAction {
 class Increment implements LoadOnComponentInitAction {}
 
 // Reducer
-ReducerTuple<State, Environment, LoadOnComponentInitAction>
-    loadOnComponentInitReducer(State state, LoadOnComponentInitAction action) {
+final loadOnComponentInitReducer =
+    Reducer<State, Environment, LoadOnComponentInitAction>(
+        (State state, LoadOnComponentInitAction action) {
   if (action is Load) {
     return ReducerTuple(
         State(count: state.count, name: "Loading..."), [loadNameEffect]);
@@ -46,7 +47,7 @@ ReducerTuple<State, Environment, LoadOnComponentInitAction>
   } else {
     return ReducerTuple(state, []);
   }
-}
+});
 
 // Stateful Widget
 class LoadOnInitComponentWidget
