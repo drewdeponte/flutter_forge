@@ -18,6 +18,11 @@ class State {
 // Actions
 abstract class ComposeWithParentOwningStateAction implements ReducerAction {}
 
+class CounterWidgetAction implements ComposeWithParentOwningStateAction {
+  final counter.CounterAction childCounterAction;
+  CounterWidgetAction(this.childCounterAction);
+}
+
 class IncrementCounter implements ComposeWithParentOwningStateAction {}
 
 // Reducer
@@ -33,6 +38,25 @@ final composeWithParentOwningStateReducer =
   }
 });
 
+counter.CounterAction? toChildAction(
+    ComposeWithParentOwningStateAction action) {
+  if (action is CounterWidgetAction) {
+    return action.childCounterAction;
+  }
+  return null;
+}
+
+final ourReducer =
+    Reducer.combine<State, Environment, ComposeWithParentOwningStateAction>(
+        counter.counterReducer.pullback(
+          toChildState: (ps) => ps.counterState,
+          toChildAction: toChildAction,
+          toChildEnvironment: (pe) => counter.Environment(),
+          fromChildState: (cs) => State(counterState: cs),
+          fromChildAction: (ca) => CounterWidgetAction(ca),
+        ),
+        composeWithParentOwningStateReducer);
+
 // Widget
 class ComposeWithParentOwningState
     extends ComponentWidget<State, ComposeWithParentOwningStateAction> {
@@ -44,7 +68,7 @@ class ComposeWithParentOwningState
                 Store(
                     initialState:
                         const State(counterState: counter.State(count: 10)),
-                    reducer: composeWithParentOwningStateReducer,
+                    reducer: ourReducer,
                     environment: Environment()));
 
   @override
@@ -60,7 +84,8 @@ class ComposeWithParentOwningState
             counter.Counter(
                 store: store.scope(
               toChildState: (state) => state.counterState,
-              fromChildAction: (childAction) => IncrementCounter(),
+              fromChildAction: (childAction) =>
+                  CounterWidgetAction(childAction),
             )),
             TextButton(
                 onPressed: () => viewStore.send(IncrementCounter()),
