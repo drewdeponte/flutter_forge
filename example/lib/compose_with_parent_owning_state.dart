@@ -16,23 +16,35 @@ class State {
 }
 
 // Actions
-class Action {
-  static ActionTuple<State, Environment> incrementCounter(State state) {
-    return ActionTuple(
+abstract class ComposeWithParentOwningStateAction implements ReducerAction {}
+
+class IncrementCounter implements ComposeWithParentOwningStateAction {}
+
+// Reducer
+ReducerTuple<State, Environment, ComposeWithParentOwningStateAction>
+    composeWithParentOwningStateReducer(
+        State state, ComposeWithParentOwningStateAction action) {
+  if (action is IncrementCounter) {
+    return ReducerTuple(
         State(counterState: counter.State(count: state.counterState.count + 1)),
         []);
+  } else {
+    return ReducerTuple(State(counterState: state.counterState), []);
   }
 }
 
 // Widget
-class ComposeWithParentOwningState extends ComponentWidget<State, Environment> {
+class ComposeWithParentOwningState
+    extends ComponentWidget<State, ComposeWithParentOwningStateAction> {
   ComposeWithParentOwningState(
-      {super.key, StoreInterface<State, Environment>? store})
+      {super.key,
+      StoreInterface<State, ComposeWithParentOwningStateAction>? store})
       : super(
             store: store ??
                 Store(
                     initialState:
                         const State(counterState: counter.State(count: 10)),
+                    reducer: composeWithParentOwningStateReducer,
                     environment: Environment()));
 
   @override
@@ -44,18 +56,14 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             counter.Counter(
                 store: store.scope(
-                    toChildState: (state) => state.counterState,
-                    fromChildAction: pullbackAction<State, Environment,
-                            counter.State, counter.Environment>(
-                        stateScoper: (parentState) => parentState.counterState,
-                        environmentScoper: (_) => counter.Environment(),
-                        statePullback: (childState) =>
-                            State(counterState: childState)))),
+              toChildState: (state) => state.counterState,
+              fromChildAction: (childAction) => IncrementCounter(),
+            )),
             TextButton(
-                onPressed: () => viewStore.send(Action.incrementCounter),
+                onPressed: () => viewStore.send(IncrementCounter()),
                 child: const Text("parent increment counter"))
           ],
         ),

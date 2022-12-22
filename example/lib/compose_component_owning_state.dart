@@ -12,13 +12,22 @@ class State {
   String name;
 }
 
-class Action {
-  static ActionTuple<State, Environment> appendYourMom(State state) {
-    return ActionTuple(State("${state.name} your mom"), []);
+abstract class ComposeComponentOwningStateAction implements ReducerAction {}
+
+class AppendYourMom implements ComposeComponentOwningStateAction {}
+
+ReducerTuple<State, Environment, ComposeComponentOwningStateAction>
+    composeComponentOwningStateReducer(
+        State state, ComposeComponentOwningStateAction action) {
+  if (action is AppendYourMom) {
+    return ReducerTuple(State("${state.name} your mom"), []);
+  } else {
+    return ReducerTuple(state, []);
   }
 }
 
-class ComposeComponentOwningState extends ComponentWidget<State, Environment> {
+class ComposeComponentOwningState
+    extends ComponentWidget<State, ComposeComponentOwningStateAction> {
   ComposeComponentOwningState({super.key, required super.store});
 
   @override
@@ -34,7 +43,7 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment> {
             Text(state.name),
             counter.Counter(),
             TextButton(
-                onPressed: () => viewStore.send(Action.appendYourMom),
+                onPressed: () => viewStore.send(AppendYourMom()),
                 child: const Text("parent append your mom to name"))
           ],
         ),

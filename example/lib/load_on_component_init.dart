@@ -14,44 +14,55 @@ class State {
 class Environment {}
 
 // Effect Tasks
-final loadNameEffect = EffectTask((state, environment, context) {
+final loadNameEffect =
+    EffectTask<State, Environment, LoadOnComponentInitAction>(
+        (state, environment, context) {
   return Future.delayed(const Duration(seconds: 5), () {})
-      .then((_) => Action.setName("The Loaded Name"));
+      .then((_) => SetName("The Loaded Name"));
 });
 
-// Reducer Action
-class Action {
-  static ActionTuple<State, Environment> load(State state) {
-    return ActionTuple(
-      State(count: state.count, name: "Loading..."),
-      [loadNameEffect],
-    );
-  }
+// Actions
+abstract class LoadOnComponentInitAction implements ReducerAction {}
 
-  static ReducerAction<State, Environment> setName(String name) {
-    return (state) {
-      return ActionTuple(State(name: name, count: state.count), []);
-    };
-  }
+class Load implements LoadOnComponentInitAction {}
 
-  static ActionTuple<State, Environment> increment(State state) {
-    return ActionTuple(State(count: state.count + 1, name: state.name), []);
+class SetName implements LoadOnComponentInitAction {
+  final String name;
+  SetName(this.name);
+}
+
+class Increment implements LoadOnComponentInitAction {}
+
+// Reducer
+ReducerTuple<State, Environment, LoadOnComponentInitAction>
+    loadOnComponentInitReducer(State state, LoadOnComponentInitAction action) {
+  if (action is Load) {
+    return ReducerTuple(
+        State(count: state.count, name: "Loading..."), [loadNameEffect]);
+  } else if (action is SetName) {
+    return ReducerTuple(State(count: state.count, name: action.name), []);
+  } else if (action is Increment) {
+    return ReducerTuple(State(count: state.count + 1, name: state.name), []);
+  } else {
+    return ReducerTuple(state, []);
   }
 }
 
 // Stateful Widget
-class LoadOnInitComponentWidget extends ComponentWidget<State, Environment> {
+class LoadOnInitComponentWidget
+    extends ComponentWidget<State, LoadOnComponentInitAction> {
   LoadOnInitComponentWidget(
-      {super.key, StoreInterface<State, Environment>? store})
+      {super.key, StoreInterface<State, LoadOnComponentInitAction>? store})
       : super(
             store: store ??
                 Store(
                     initialState: const State(count: 0, name: "Initial"),
+                    reducer: loadOnComponentInitReducer,
                     environment: Environment()));
 
   @override
   void postInitState(viewStore) {
-    viewStore.send(Action.load);
+    viewStore.send(Load());
   }
 
   @override
@@ -71,7 +82,7 @@ class LoadOnInitComponentWidget extends ComponentWidget<State, Environment> {
                 style: Theme.of(context).textTheme.headline4,
               ),
               OutlinedButton(
-                  onPressed: () => viewStore.send(Action.increment),
+                  onPressed: () => viewStore.send(Increment()),
                   child: const Text("increment"))
             ])
           ],

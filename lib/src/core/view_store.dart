@@ -6,23 +6,24 @@ import 'reducer_action.dart';
 import 'view_store_interface.dart';
 
 /// Manage state updates in a controlled fashion
-class ViewStore<S, E> extends StateNotifier<S>
-    implements ViewStoreInterface<S, E> {
-  ViewStore(
-      {required this.ref,
-      required S initialState,
-      required this.environment,
-      this.reducer})
-      : super(initialState);
+class ViewStore<S, E, A extends ReducerAction> extends StateNotifier<S>
+    implements ViewStoreInterface<A> {
+  ViewStore({
+    required this.ref,
+    required S initialState,
+    required this.reducer,
+    required this.environment,
+  }) : super(initialState);
+
   final Ref ref;
-  final Reducer<S, E>? reducer;
+  final Reducer<S, E, A> reducer;
   final E environment;
-  final Queue<ReducerAction<S, E>> actionQueue = Queue();
+  final Queue<A> actionQueue = Queue();
   late BuildContext _context;
   bool isSending = false;
 
   @override
-  void send(ReducerAction<S, E> action) {
+  void send(A action) {
     actionQueue.addFirst(action);
 
     if (isSending) {
@@ -30,16 +31,6 @@ class ViewStore<S, E> extends StateNotifier<S>
     }
 
     _processQueue();
-  }
-
-  Reducer<S, E> _reducer() {
-    if (reducer != null) {
-      return reducer!;
-    } else {
-      return (S state, ReducerAction<S, E> action) {
-        return action(state);
-      };
-    }
   }
 
   Future<void> _processQueue() async {
@@ -50,7 +41,7 @@ class ViewStore<S, E> extends StateNotifier<S>
       // TODO: add some sort of hook for logging here
       // Fimber.d('send($action): begin:');
 
-      final reducerTuple = _reducer()(state, action);
+      final reducerTuple = reducer(state, action);
       state = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {

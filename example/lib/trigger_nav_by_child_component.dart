@@ -18,7 +18,8 @@ class State {
 // Effects
 class Effects {
   static final navigateToAnotherPage =
-      EffectTask<State, Environment>((s, e, context) async {
+      EffectTask<State, Environment, TriggerNavByChildComponentAction>(
+          (s, e, context) async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const AnotherPage()));
     return null;
@@ -26,9 +27,18 @@ class Effects {
 }
 
 // Actions
-class Action {
-  static ActionTuple<State, Environment> buttonPressed(State state) {
-    return ActionTuple(state, [Effects.navigateToAnotherPage]);
+abstract class TriggerNavByChildComponentAction implements ReducerAction {}
+
+class ButtonPressed implements TriggerNavByChildComponentAction {}
+
+// Reducer
+ReducerTuple<State, Environment, TriggerNavByChildComponentAction>
+    triggerNavByChildComponentReducer(
+        State state, TriggerNavByChildComponentAction action) {
+  if (action is ButtonPressed) {
+    return ReducerTuple(state, [Effects.navigateToAnotherPage]);
+  } else {
+    return ReducerTuple(state, []);
   }
 }
 
@@ -37,8 +47,10 @@ class Action {
 // a StatelessWidget, you have to decide if you want your store to be global or if
 // you want it to be created & destroyed with a widget. If the later you should create
 // the store as part of a StatefulWidget
-final triggerNavByChildComponentStore =
-    Store(initialState: const State(), environment: Environment());
+final triggerNavByChildComponentStore = Store(
+    initialState: const State(),
+    reducer: triggerNavByChildComponentReducer,
+    environment: Environment());
 
 // Widget
 class TriggerNavByChildComponent extends StatelessWidget {
@@ -56,14 +68,11 @@ class TriggerNavByChildComponent extends StatelessWidget {
           children: [
             SomeButton(
                 store: triggerNavByChildComponentStore.scope(
-                    toChildState: (state) => some_button.State(),
-                    fromChildAction: pullbackMapAction({
-                      some_button.Action.buttonPressed: Action.buttonPressed
-                    },
-                        stateScoper: (state) => some_button.State(),
-                        environmentScoper: (environment) =>
-                            some_button.Environment(),
-                        statePullback: (childState) => const State())))
+              toChildState: (state) => some_button.State(),
+              fromChildAction: (childAction) {
+                return ButtonPressed();
+              },
+            ))
           ],
         ),
       ),

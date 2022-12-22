@@ -14,19 +14,28 @@ class State {
 }
 
 // Actions
-class Action {
-  static ActionTuple<State, Environment> increment(State state) {
-    return ActionTuple(State(count: state.count + 1), []);
+abstract class CounterAction implements ReducerAction {}
+
+class IncrementCounterByOne implements CounterAction {}
+
+// Reducer
+ReducerTuple<State, Environment, CounterAction> counterReducer(
+    State state, CounterAction action) {
+  if (action is IncrementCounterByOne) {
+    return ReducerTuple(State(count: state.count + 1), []);
+  } else {
+    return ReducerTuple(state, []);
   }
 }
 
 // Widget
-class Counter extends ComponentWidget<State, Environment> {
-  Counter({super.key, StoreInterface<State, Environment>? store})
+class Counter extends ComponentWidget<State, CounterAction> {
+  Counter({super.key, StoreInterface<State, CounterAction>? store})
       : super(
             store: store ??
                 Store(
                     initialState: const State(count: 0),
+                    reducer: counterReducer,
                     environment: Environment()));
 
   @override
@@ -37,7 +46,7 @@ class Counter extends ComponentWidget<State, Environment> {
         style: Theme.of(context).textTheme.headline4,
       ),
       OutlinedButton(
-          onPressed: () => viewStore.send(Action.increment),
+          onPressed: () => viewStore.send(IncrementCounterByOne()),
           child: const Text("increment"))
     ]);
   }
