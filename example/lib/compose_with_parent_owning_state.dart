@@ -19,43 +19,34 @@ class State {
 abstract class ComposeWithParentOwningStateAction implements ReducerAction {}
 
 class CounterWidgetAction implements ComposeWithParentOwningStateAction {
-  final counter.CounterAction childCounterAction;
-  CounterWidgetAction(this.childCounterAction);
+  final counter.CounterAction action;
+  CounterWidgetAction(this.action);
 }
 
 class IncrementCounter implements ComposeWithParentOwningStateAction {}
 
 // Reducer
 final composeWithParentOwningStateReducer =
-    Reducer<State, Environment, ComposeWithParentOwningStateAction>(
-        (State state, ComposeWithParentOwningStateAction action) {
-  if (action is IncrementCounter) {
-    return ReducerTuple(
-        State(counterState: counter.State(count: state.counterState.count + 1)),
-        []);
-  } else {
-    return ReducerTuple(State(counterState: state.counterState), []);
-  }
-});
-
-counter.CounterAction? toChildAction(
-    ComposeWithParentOwningStateAction action) {
-  if (action is CounterWidgetAction) {
-    return action.childCounterAction;
-  }
-  return null;
-}
-
-final ourReducer =
     Reducer.combine<State, Environment, ComposeWithParentOwningStateAction>(
-        counter.counterReducer.pullback(
-          toChildState: (ps) => ps.counterState,
-          toChildAction: toChildAction,
-          toChildEnvironment: (pe) => counter.Environment(),
-          fromChildState: (cs) => State(counterState: cs),
-          fromChildAction: (ca) => CounterWidgetAction(ca),
-        ),
-        composeWithParentOwningStateReducer);
+  counter.counterReducer.pullback(
+    toChildState: (ps) => ps.counterState,
+    toChildAction: (a) => (a is CounterWidgetAction) ? a.action : null,
+    toChildEnvironment: (pe) => counter.Environment(),
+    fromChildState: (cs) => State(counterState: cs),
+    fromChildAction: (ca) => CounterWidgetAction(ca),
+  ),
+  Reducer<State, Environment, ComposeWithParentOwningStateAction>(
+      (State state, ComposeWithParentOwningStateAction action) {
+    if (action is IncrementCounter) {
+      return ReducerTuple(
+          State(
+              counterState: counter.State(count: state.counterState.count + 1)),
+          []);
+    } else {
+      return ReducerTuple(State(counterState: state.counterState), []);
+    }
+  }),
+);
 
 // Widget
 class ComposeWithParentOwningState
@@ -68,7 +59,7 @@ class ComposeWithParentOwningState
                 Store(
                     initialState:
                         const State(counterState: counter.State(count: 10)),
-                    reducer: ourReducer,
+                    reducer: composeWithParentOwningStateReducer,
                     environment: Environment()));
 
   @override
