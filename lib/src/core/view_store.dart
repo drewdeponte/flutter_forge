@@ -10,12 +10,13 @@ class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
     implements ViewStoreInterface<A> {
   ViewStore({
     required S initialState,
-    required this.reducer,
+    required Reducer<S, E, A> reducer,
     required this.environment,
-  }) : _initialState = initialState;
+  })  : _initialState = initialState,
+        _reducer = reducer;
 
   final S _initialState;
-  final Reducer<S, E, A> reducer;
+  final Reducer<S, E, A> _reducer;
   final E environment;
   final Queue<A> _actionQueue = Queue();
   late BuildContext _context;
@@ -45,7 +46,7 @@ class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
       // TODO: add some sort of hook for logging here
       // Fimber.d('send($action): begin:');
 
-      final reducerTuple = reducer.run(state, action);
+      final reducerTuple = _reducer.run(state, action);
       state = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {
