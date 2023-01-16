@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/store_interface.dart';
-import 'core/view_store_interface.dart';
-import 'core/reducer_action.dart';
+import 'store_interface.dart';
+import 'state_management/view_store_interface.dart';
+import 'state_management/reducer_action.dart';
 
 abstract class ComponentWidget<S, A extends ReducerAction>
     extends ConsumerStatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'view_store_interface.dart';
-import 'reducer_action.dart';
+import 'state_management/reducer_action.dart';
+import 'state_management/view_store_interface.dart';
 
 /// Formal Interface for all Store implementations
 abstract class StoreInterface<S, A extends ReducerAction> {

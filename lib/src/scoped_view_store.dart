@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import 'core/view_store_interface.dart';
-import 'core/reducer_action.dart';
+import 'state_management/view_store_interface.dart';
+import 'state_management/reducer_action.dart';
 
 // Is this really a borrowed state view store? Or maybe the concept of Scoping is by definition borrowing and focusing
 class ScopedViewStore<S, E, A extends ReducerAction, PS, PE,

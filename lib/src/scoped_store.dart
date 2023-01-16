@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/store_interface.dart';
-import 'core/reducer_action.dart';
-import 'core/view_store_interface.dart';
+import 'store_interface.dart';
+import 'state_management/reducer_action.dart';
+import 'state_management/view_store_interface.dart';
 import 'scoped_view_store.dart';
 
 class ScopedStore<S, E, A extends ReducerAction, PS, PE,
