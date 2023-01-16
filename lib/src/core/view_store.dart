@@ -18,15 +18,15 @@ class ViewStore<S, E, A extends ReducerAction> extends StateNotifier<S>
   final Ref ref;
   final Reducer<S, E, A> reducer;
   final E environment;
-  final Queue<A> actionQueue = Queue();
+  final Queue<A> _actionQueue = Queue();
   late BuildContext _context;
-  bool isSending = false;
+  bool _isSending = false;
 
   @override
   void send(A action) {
-    actionQueue.addFirst(action);
+    _actionQueue.addFirst(action);
 
-    if (isSending) {
+    if (_isSending) {
       return;
     }
 
@@ -34,10 +34,10 @@ class ViewStore<S, E, A extends ReducerAction> extends StateNotifier<S>
   }
 
   Future<void> _processQueue() async {
-    isSending = true;
+    _isSending = true;
 
-    while (actionQueue.isNotEmpty) {
-      final action = actionQueue.removeLast();
+    while (_actionQueue.isNotEmpty) {
+      final action = _actionQueue.removeLast();
       // TODO: add some sort of hook for logging here
       // Fimber.d('send($action): begin:');
 
@@ -57,7 +57,7 @@ class ViewStore<S, E, A extends ReducerAction> extends StateNotifier<S>
       }
     }
 
-    isSending = false;
+    _isSending = false;
   }
 
   void setContext(BuildContext context) {
