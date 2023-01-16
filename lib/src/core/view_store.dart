@@ -11,13 +11,14 @@ class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
   ViewStore({
     required S initialState,
     required Reducer<S, E, A> reducer,
-    required this.environment,
+    required E environment,
   })  : _initialState = initialState,
-        _reducer = reducer;
+        _reducer = reducer,
+        _environment = environment;
 
   final S _initialState;
   final Reducer<S, E, A> _reducer;
-  final E environment;
+  final E _environment;
   final Queue<A> _actionQueue = Queue();
   late BuildContext _context;
   bool _isSending = false;
@@ -50,7 +51,7 @@ class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
       state = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {
-          effectTask.run(state, environment, context()).then((optionalAction) {
+          effectTask.run(state, _environment, context()).then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }
