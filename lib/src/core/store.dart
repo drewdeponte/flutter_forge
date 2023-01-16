@@ -11,18 +11,18 @@ class Store<S, E, A extends ReducerAction> extends StoreInterface<S, A> {
       {required S initialState,
       required Reducer<S, E, A> reducer,
       required E environment})
-      : _stateNotifierProvider =
+      : _notifierProvider =
             viewStoreProvider(initialState, reducer, environment);
-  final StateNotifierProvider<ViewStore<S, E, A>, S> _stateNotifierProvider;
+  final NotifierProvider<ViewStore<S, E, A>, S> _notifierProvider;
 
   @override
   AlwaysAliveProviderListenable<S> get provider {
-    return _stateNotifierProvider;
+    return _notifierProvider;
   }
 
   @override
   ViewStore<S, E, A> viewStore(WidgetRef ref) {
-    return ref.read(_stateNotifierProvider.notifier);
+    return ref.read(_notifierProvider.notifier);
   }
 
   @override
@@ -32,7 +32,7 @@ class Store<S, E, A extends ReducerAction> extends StoreInterface<S, A> {
     return ScopedStore(
         parentStore: this,
         stateProvider: Provider<CS>((ref) {
-          final parentState = ref.watch(_stateNotifierProvider);
+          final parentState = ref.watch(_notifierProvider);
           return toChildState(parentState);
         }),
         fromChildAction: fromChildAction);

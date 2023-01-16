@@ -6,21 +6,25 @@ import 'reducer_action.dart';
 import 'view_store_interface.dart';
 
 /// Manage state updates in a controlled fashion
-class ViewStore<S, E, A extends ReducerAction> extends StateNotifier<S>
+class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
     implements ViewStoreInterface<A> {
   ViewStore({
-    required this.ref,
-    required S initialState,
+    required this.initialState,
     required this.reducer,
     required this.environment,
-  }) : super(initialState);
+  });
 
-  final Ref ref;
+  final S initialState;
   final Reducer<S, E, A> reducer;
   final E environment;
   final Queue<A> _actionQueue = Queue();
   late BuildContext _context;
   bool _isSending = false;
+
+  @override
+  S build() {
+    return initialState;
+  }
 
   @override
   void send(A action) {
@@ -67,7 +71,4 @@ class ViewStore<S, E, A extends ReducerAction> extends StateNotifier<S>
   BuildContext context() {
     return _context;
   }
-
-  @override
-  String toString() => 'ViewStore(ref: $ref)';
 }
