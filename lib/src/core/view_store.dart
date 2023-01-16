@@ -5,7 +5,14 @@ import 'reducer.dart';
 import 'reducer_action.dart';
 import 'view_store_interface.dart';
 
-/// Manage state updates in a controlled fashion
+/// ViewStore is a Riverpod Notifier designed to use the Redux pattern to
+/// facilitate managing state change in a controlled way
+///
+/// To mutate state with it you have to create an Action and send that
+/// Action to the ViewStore via the send() method. The Action is then
+/// interpreted by the Reducer provided at initialization and the Reducer
+/// produces the new representation of state which the ViewStore then
+/// applies and notifies any observers of that state.
 class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
     implements ViewStoreInterface<A> {
   ViewStore({
