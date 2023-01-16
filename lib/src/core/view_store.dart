@@ -9,12 +9,12 @@ import 'view_store_interface.dart';
 class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
     implements ViewStoreInterface<A> {
   ViewStore({
-    required this.initialState,
+    required S initialState,
     required this.reducer,
     required this.environment,
-  });
+  }) : _initialState = initialState;
 
-  final S initialState;
+  final S _initialState;
   final Reducer<S, E, A> reducer;
   final E environment;
   final Queue<A> _actionQueue = Queue();
@@ -23,7 +23,7 @@ class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
 
   @override
   S build() {
-    return initialState;
+    return _initialState;
   }
 
   @override
