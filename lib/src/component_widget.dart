@@ -27,7 +27,7 @@ class _ComponentState<S, E, A extends ReducerAction>
   @override
   void initState() {
     super.initState();
-    store.viewStore.setContext(context);
+    store.viewStore.context = context;
     widget.initState(store.viewStore);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.postInitState(store.viewStore);

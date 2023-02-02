@@ -21,7 +21,7 @@ class Effects {
       EffectTask<State, Environment, TriggerNavByChildComponentAction>(
           (s, e, context) async {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const AnotherPage()));
+        context!, MaterialPageRoute(builder: (context) => const AnotherPage()));
     return null;
   });
 }

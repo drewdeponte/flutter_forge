@@ -26,7 +26,7 @@ class ViewStore<S, E, A extends ReducerAction> extends ChangeNotifier
   final Reducer<S, E, A> _reducer;
   final E _environment;
   final Queue<A> _actionQueue = Queue();
-  late BuildContext _context;
+  BuildContext? context;
   bool _isSending = false;
 
   S get state {
@@ -65,9 +65,7 @@ class ViewStore<S, E, A extends ReducerAction> extends ChangeNotifier
       this.state = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {
-          effectTask
-              .run(_state, _environment, context())
-              .then((optionalAction) {
+          effectTask.run(_state, _environment, context).then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }
@@ -81,13 +79,5 @@ class ViewStore<S, E, A extends ReducerAction> extends ChangeNotifier
     }
 
     _isSending = false;
-  }
-
-  void setContext(BuildContext context) {
-    _context = context;
-  }
-
-  BuildContext context() {
-    return _context;
   }
 }

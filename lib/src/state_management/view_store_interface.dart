@@ -3,8 +3,7 @@ import 'reducer_action.dart';
 
 /// Formal Interface for all ViewStore implementations
 abstract class ViewStoreInterface<S, A extends ReducerAction> {
-  void setContext(BuildContext context);
-  BuildContext context();
+  BuildContext? context;
 
   S get state;
   set state(S newState);
