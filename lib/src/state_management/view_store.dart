@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'reducer.dart';
 import 'reducer_action.dart';
 import 'view_store_interface.dart';
@@ -13,26 +12,34 @@ import 'view_store_interface.dart';
 /// interpreted by the Reducer provided at initialization and the Reducer
 /// produces the new representation of state which the ViewStore then
 /// applies and notifies any observers of that state.
-class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
-    implements ViewStoreInterface<A> {
+class ViewStore<S, E, A extends ReducerAction> extends ChangeNotifier
+    implements ViewStoreInterface<S, A> {
   ViewStore({
     required S initialState,
     required Reducer<S, E, A> reducer,
     required E environment,
-  })  : _initialState = initialState,
+  })  : _state = initialState,
         _reducer = reducer,
         _environment = environment;
 
-  final S _initialState;
+  S _state;
   final Reducer<S, E, A> _reducer;
   final E _environment;
   final Queue<A> _actionQueue = Queue();
   late BuildContext _context;
   bool _isSending = false;
 
-  @override
-  S build() {
-    return _initialState;
+  S get state {
+    return _state;
+  }
+
+  set state(S newState) {
+    _state = newState;
+    notifyListeners();
+  }
+
+  Listenable get listenable {
+    return this;
   }
 
   @override
@@ -54,17 +61,20 @@ class ViewStore<S, E, A extends ReducerAction> extends Notifier<S>
       // TODO: add some sort of hook for logging here
       // Fimber.d('send($action): begin:');
 
-      final reducerTuple = _reducer.run(state, action);
-      state = reducerTuple.state;
+      final reducerTuple = _reducer.run(_state, action);
+      this.state = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {
-          effectTask.run(state, _environment, context()).then((optionalAction) {
+          effectTask
+              .run(_state, _environment, context())
+              .then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }
           });
         });
       } catch (error) {
+        print("Error while processing effects: $error");
         // TODO: add some sort of hook for logging here
         // Fimber.d('error executing action: $action\nerror: $error');
       }

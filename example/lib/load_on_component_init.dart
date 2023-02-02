@@ -51,9 +51,10 @@ final loadOnComponentInitReducer =
 
 // Stateful Widget
 class LoadOnInitComponentWidget
-    extends ComponentWidget<State, LoadOnComponentInitAction> {
+    extends ComponentWidget<State, Environment, LoadOnComponentInitAction> {
   LoadOnInitComponentWidget(
-      {super.key, StoreInterface<State, LoadOnComponentInitAction>? store})
+      {super.key,
+      StoreInterface<State, Environment, LoadOnComponentInitAction>? store})
       : super(
             store: store ??
                 Store(

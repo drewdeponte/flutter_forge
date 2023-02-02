@@ -26,9 +26,9 @@ final composeComponentOwningStateReducer =
   }
 });
 
-class ComposeComponentOwningState
-    extends ComponentWidget<State, ComposeComponentOwningStateAction> {
-  ComposeComponentOwningState({super.key, required super.store});
+class ComposeComponentOwningState extends ComponentWidget<State, Environment,
+    ComposeComponentOwningStateAction> {
+  const ComposeComponentOwningState({super.key, required super.store});
 
   @override
   Widget build(context, state, viewStore) {

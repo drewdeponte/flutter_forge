@@ -9,7 +9,9 @@ import 'counter.dart' as counter;
 // Component with overriden ui
 class CounterWithOverridenUi extends counter.Counter {
   CounterWithOverridenUi(
-      {super.key, StoreInterface<counter.State, counter.CounterAction>? store})
+      {super.key,
+      StoreInterface<counter.State, counter.Environment, counter.CounterAction>?
+          store})
       : super(
             store: store ??
                 Store(
@@ -56,8 +58,9 @@ final overrideUiReducer = Reducer<State, Environment, OverrideUiAction>(
 });
 
 // Component housing the component with overriden ui
-class OverrideUiComponent extends ComponentWidget<State, OverrideUiAction> {
-  OverrideUiComponent({super.key, required super.store});
+class OverrideUiComponent
+    extends ComponentWidget<State, Environment, OverrideUiAction> {
+  const OverrideUiComponent({super.key, required super.store});
 
   @override
   Widget build(context, state, viewStore) {

@@ -22,8 +22,9 @@ final someButtonReducer = Reducer<State, Environment, SomeButtonAction>(
 });
 
 // Widget
-class SomeButton extends ComponentWidget<State, SomeButtonAction> {
-  SomeButton({super.key, StoreInterface<State, SomeButtonAction>? store})
+class SomeButton extends ComponentWidget<State, Environment, SomeButtonAction> {
+  SomeButton(
+      {super.key, StoreInterface<State, Environment, SomeButtonAction>? store})
       : super(
             store: store ??
                 Store(

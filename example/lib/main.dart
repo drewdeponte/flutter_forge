@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:flutter_riverpod_composable_arch/trigger_nav_by_child_component.dart';
 
@@ -10,7 +9,7 @@ import 'load_on_component_init.dart' as load_on_component_init;
 import 'override_ui.dart' as override_ui;
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -107,8 +106,7 @@ class Home extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            const TriggerNavByChildComponent()));
+                        builder: (context) => TriggerNavByChildComponent()));
               },
               child: const Text('Trigger Nav by Child Component'),
             ),

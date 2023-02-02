@@ -29,8 +29,8 @@ final counterReducer = Reducer<State, Environment, CounterAction>(
 });
 
 // Widget
-class Counter extends ComponentWidget<State, CounterAction> {
-  Counter({super.key, StoreInterface<State, CounterAction>? store})
+class Counter extends ComponentWidget<State, Environment, CounterAction> {
+  Counter({super.key, StoreInterface<State, Environment, CounterAction>? store})
       : super(
             store: store ??
                 Store(

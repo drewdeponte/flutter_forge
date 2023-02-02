@@ -49,11 +49,12 @@ final composeWithParentOwningStateReducer =
 );
 
 // Widget
-class ComposeWithParentOwningState
-    extends ComponentWidget<State, ComposeWithParentOwningStateAction> {
+class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
+    ComposeWithParentOwningStateAction> {
   ComposeWithParentOwningState(
       {super.key,
-      StoreInterface<State, ComposeWithParentOwningStateAction>? store})
+      StoreInterface<State, Environment, ComposeWithParentOwningStateAction>?
+          store})
       : super(
             store: store ??
                 Store(
@@ -77,6 +78,7 @@ class ComposeWithParentOwningState
               toChildState: (state) => state.counterState,
               fromChildAction: (childAction) =>
                   CounterWidgetAction(childAction),
+              toChildEnvironment: (_) => counter.Environment(),
             )),
             TextButton(
                 onPressed: () => viewStore.send(IncrementCounter()),

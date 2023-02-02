@@ -42,22 +42,22 @@ final triggerNavByChildComponentReducer =
   }
 });
 
-// Note: In a real world application where it isn't 100% flutter forge components up
-// and down the stack, which this layer is representing that boundary as it is just
-// a StatelessWidget, you have to decide if you want your store to be global or if
-// you want it to be created & destroyed with a widget. If the later you should create
-// the store as part of a StatefulWidget
-final triggerNavByChildComponentStore = Store(
-    initialState: const State(),
-    reducer: triggerNavByChildComponentReducer,
-    environment: Environment());
-
 // Widget
-class TriggerNavByChildComponent extends StatelessWidget {
-  const TriggerNavByChildComponent({super.key});
+class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
+    TriggerNavByChildComponentAction> {
+  TriggerNavByChildComponent(
+      {super.key,
+      StoreInterface<State, Environment, TriggerNavByChildComponentAction>?
+          store})
+      : super(
+            store: store ??
+                Store(
+                    initialState: const State(),
+                    reducer: triggerNavByChildComponentReducer,
+                    environment: Environment()));
 
   @override
-  Widget build(context) {
+  Widget build(context, state, viewStore) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Trigger Nav By Child Component'),
@@ -67,11 +67,12 @@ class TriggerNavByChildComponent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SomeButton(
-                store: triggerNavByChildComponentStore.scope(
+                store: store.scope(
               toChildState: (state) => some_button.State(),
               fromChildAction: (childAction) {
                 return ButtonPressed();
               },
+              toChildEnvironment: (_) => some_button.Environment(),
             ))
           ],
         ),
