@@ -52,11 +52,13 @@ class Store<S, E, A extends ReducerAction> extends StoreInterface<S, E, A> {
         environment: toChildEnvironment(_environment));
 
     // Handle state changing in the parent and it updating the child
+    final weakChildStore = WeakReference(childStore);
     final syncParentToChildState = () {
       if (isDueToChildAction) {
         return;
       } else {
-        childStore.viewStore.state = toChildState(this.viewStore.state);
+        weakChildStore.target?.viewStore.state =
+            toChildState(this.viewStore.state);
       }
     };
 
