@@ -1,8 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:equatable/equatable.dart';
 import 'reducer_action.dart';
 
 /// Formal Interface for all ViewStore implementations
-abstract class ViewStoreInterface<S, A extends ReducerAction> {
+abstract class ViewStoreInterface<S extends Equatable,
+    A extends ReducerAction> {
   BuildContext? context;
 
   S get state;

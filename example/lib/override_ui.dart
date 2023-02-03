@@ -2,7 +2,7 @@ library override_ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:equatable/equatable.dart';
 
 import 'counter.dart' as counter;
 
@@ -37,9 +37,14 @@ class CounterWithOverridenUi extends counter.Counter {
 class Environment {}
 
 // State
-class State {
-  State(this.name);
-  String name;
+@immutable
+class State extends Equatable {
+  const State(this.name);
+
+  final String name;
+
+  @override
+  List<Object> get props => [name];
 }
 
 // Actions

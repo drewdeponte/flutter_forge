@@ -4,15 +4,18 @@ import 'state_management/view_store.dart';
 import 'state_management/reducer.dart';
 import 'state_management/reducer_tuple.dart';
 import 'package:flutter/widgets.dart';
+import 'package:equatable/equatable.dart';
 
-class ListenerFunctionViewStoreBinding<S, E, A extends ReducerAction> {
+class ListenerFunctionViewStoreBinding<S extends Equatable, E,
+    A extends ReducerAction> {
   ListenerFunctionViewStoreBinding(
       {required this.viewStore, required this.listenerFunction});
   final VoidCallback listenerFunction;
   final ViewStore<S, E, A> viewStore;
 }
 
-class Store<S, E, A extends ReducerAction> extends StoreInterface<S, E, A> {
+class Store<S extends Equatable, E, A extends ReducerAction>
+    extends StoreInterface<S, E, A> {
   Store(
       {required S initialState,
       required Reducer<S, E, A> reducer,
@@ -30,10 +33,11 @@ class Store<S, E, A extends ReducerAction> extends StoreInterface<S, E, A> {
   });
 
   @override
-  StoreInterface<CS, CE, CA> scope<CS, CA extends ReducerAction, CE>(
-      {required CS Function(S) toChildState,
-      required A Function(CA) fromChildAction,
-      required CE Function(E) toChildEnvironment}) {
+  StoreInterface<CS, CE, CA>
+      scope<CS extends Equatable, CA extends ReducerAction, CE>(
+          {required CS Function(S) toChildState,
+          required A Function(CA) fromChildAction,
+          required CE Function(E) toChildEnvironment}) {
     var isDueToChildAction = false;
     // Handle actions happening in the child and being handled in the parent
     final childReducer = Reducer<CS, CE, CA>((CS childState, CA childAction) {

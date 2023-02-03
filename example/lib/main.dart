@@ -28,11 +28,11 @@ class MyApp extends StatelessWidget {
 }
 
 final composeComponentOwningStateStore = Store(
-    initialState: compose_component_owning_state.State("hello"),
+    initialState: const compose_component_owning_state.State("hello"),
     reducer: compose_component_owning_state.composeComponentOwningStateReducer,
     environment: compose_component_owning_state.Environment());
 final overrideUiStore = Store(
-    initialState: override_ui.State('override ui'),
+    initialState: const override_ui.State('override ui'),
     reducer: override_ui.overrideUiReducer,
     environment: override_ui.Environment());
 

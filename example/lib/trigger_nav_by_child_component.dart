@@ -3,6 +3,7 @@ library trigger_nav_by_child_component;
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:flutter_riverpod_composable_arch/some_button.dart';
+import 'package:equatable/equatable.dart';
 
 import 'some_button.dart' as some_button;
 
@@ -11,8 +12,11 @@ class Environment {}
 
 // State
 @immutable
-class State {
+class State extends Equatable {
   const State();
+
+  @override
+  List<Object> get props => [];
 }
 
 // Effects
@@ -68,7 +72,7 @@ class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
           children: [
             SomeButton(
                 store: store.scope(
-              toChildState: (state) => some_button.State(),
+              toChildState: (state) => const some_button.State(),
               fromChildAction: (childAction) {
                 return ButtonPressed();
               },

@@ -2,6 +2,7 @@ library compose_with_parent_owning_state;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
+import 'package:equatable/equatable.dart';
 
 import 'counter.dart' as counter;
 
@@ -10,9 +11,13 @@ class Environment {}
 
 // State
 @immutable
-class State {
+class State extends Equatable {
   const State({required this.counterState});
+
   final counter.State counterState;
+
+  @override
+  List<Object> get props => [counterState];
 }
 
 // Actions

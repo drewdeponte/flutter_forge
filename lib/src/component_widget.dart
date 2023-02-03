@@ -2,8 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'store_interface.dart';
 import 'state_management/view_store_interface.dart';
 import 'state_management/reducer_action.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class ComponentWidget<S, E, A extends ReducerAction>
+abstract class ComponentWidget<S extends Equatable, E, A extends ReducerAction>
     extends StatefulWidget {
   const ComponentWidget({super.key, required this.store});
   final StoreInterface<S, E, A> store;
@@ -19,7 +20,7 @@ abstract class ComponentWidget<S, E, A extends ReducerAction>
   createState() => _ComponentState(store);
 }
 
-class _ComponentState<S, E, A extends ReducerAction>
+class _ComponentState<S extends Equatable, E, A extends ReducerAction>
     extends State<ComponentWidget> {
   _ComponentState(this.store);
   final StoreInterface<S, E, A> store;

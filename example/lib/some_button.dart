@@ -2,13 +2,19 @@ library some_button;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
+import 'package:equatable/equatable.dart';
 
 // Environment
 class Environment {}
 
 // State
 @immutable
-class State {}
+class State extends Equatable {
+  const State();
+
+  @override
+  List<Object> get props => [];
+}
 
 // Actions
 abstract class SomeButtonAction implements ReducerAction {}
@@ -28,7 +34,7 @@ class SomeButton extends ComponentWidget<State, Environment, SomeButtonAction> {
       : super(
             store: store ??
                 Store(
-                    initialState: State(),
+                    initialState: const State(),
                     reducer: someButtonReducer,
                     environment: Environment()));
 

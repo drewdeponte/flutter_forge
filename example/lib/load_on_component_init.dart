@@ -2,13 +2,18 @@ library load_on_component_init;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
+import 'package:equatable/equatable.dart';
 
 // State definition
 @immutable
-class State {
+class State extends Equatable {
   const State({required this.count, required this.name});
+
   final int count;
   final String name;
+
+  @override
+  List<Object> get props => [count, name];
 }
 
 class Environment {}

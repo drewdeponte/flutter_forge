@@ -2,15 +2,20 @@ library counter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
+import 'package:equatable/equatable.dart';
 
 // Environment
 class Environment {}
 
 // State
 @immutable
-class State {
+class State extends Equatable {
   const State({required this.count});
+
   final int count;
+
+  @override
+  List<Object> get props => [count];
 }
 
 // Actions
