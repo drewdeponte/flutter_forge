@@ -64,7 +64,8 @@ class LoadOnInitComponentWidget
             store: store ??
                 Store(
                     initialState: const State(count: 0, name: "Initial"),
-                    reducer: loadOnComponentInitReducer,
+                    reducer: loadOnComponentInitReducer.debug(
+                        name: "loadOnComponentInit"),
                     environment: Environment()));
 
   @override
@@ -74,6 +75,7 @@ class LoadOnInitComponentWidget
 
   @override
   Widget build(context, state, viewStore) {
+    print("LoadOnInitComponentWidget build called");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Load On Init Component'),
@@ -96,5 +98,11 @@ class LoadOnInitComponentWidget
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("LoadOnInitComponentWidget dispose() called");
+    super.dispose();
   }
 }

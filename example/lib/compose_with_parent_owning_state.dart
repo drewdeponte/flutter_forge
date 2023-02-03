@@ -32,26 +32,16 @@ class IncrementCounter implements ComposeWithParentOwningStateAction {}
 
 // Reducer
 final composeWithParentOwningStateReducer =
-    Reducer.combine<State, Environment, ComposeWithParentOwningStateAction>(
-  counter.counterReducer.pullback(
-    toChildState: (ps) => ps.counterState,
-    toChildAction: (a) => (a is CounterWidgetAction) ? a.action : null,
-    toChildEnvironment: (pe) => counter.Environment(),
-    fromChildState: (cs) => State(counterState: cs),
-    fromChildAction: (ca) => CounterWidgetAction(ca),
-  ),
-  Reducer<State, Environment, ComposeWithParentOwningStateAction>(
-      (State state, ComposeWithParentOwningStateAction action) {
-    if (action is IncrementCounter) {
-      return ReducerTuple(
-          State(
-              counterState: counter.State(count: state.counterState.count + 1)),
-          []);
-    } else {
-      return ReducerTuple(State(counterState: state.counterState), []);
-    }
-  }),
-);
+    Reducer<State, Environment, ComposeWithParentOwningStateAction>(
+        (State state, ComposeWithParentOwningStateAction action) {
+  if (action is IncrementCounter) {
+    return ReducerTuple(
+        State(counterState: counter.State(count: state.counterState.count + 1)),
+        []);
+  } else {
+    return ReducerTuple(State(counterState: state.counterState), []);
+  }
+});
 
 // Widget
 class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
@@ -65,11 +55,13 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
                 Store(
                     initialState:
                         const State(counterState: counter.State(count: 10)),
-                    reducer: composeWithParentOwningStateReducer,
+                    reducer: composeWithParentOwningStateReducer.debug(
+                        name: "ComposeWithParentOwningState"),
                     environment: Environment()));
 
   @override
   Widget build(context, state, viewStore) {
+    print("ComposeWithParentOwningState build called");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Compose with Parent Owning State'),
@@ -79,11 +71,12 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             counter.Counter(
-                store: store.scope(
+                store: store.scopeSyncState(
               toChildState: (state) => state.counterState,
-              fromChildAction: (childAction) =>
-                  CounterWidgetAction(childAction),
+              fromChildState: (state, childState) =>
+                  State(counterState: childState),
               toChildEnvironment: (_) => counter.Environment(),
+              childReducer: counter.counterReducer.debug(name: "Counter"),
             )),
             TextButton(
                 onPressed: () => viewStore.send(IncrementCounter()),
@@ -92,5 +85,11 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("ComposeWithParentOwningState dispose() called");
+    super.dispose();
   }
 }

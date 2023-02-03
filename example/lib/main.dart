@@ -29,11 +29,12 @@ class MyApp extends StatelessWidget {
 
 final composeComponentOwningStateStore = Store(
     initialState: const compose_component_owning_state.State("hello"),
-    reducer: compose_component_owning_state.composeComponentOwningStateReducer,
+    reducer: compose_component_owning_state.composeComponentOwningStateReducer
+        .debug(name: "composeComponentOwningState"),
     environment: compose_component_owning_state.Environment());
 final overrideUiStore = Store(
     initialState: const override_ui.State('override ui'),
-    reducer: override_ui.overrideUiReducer,
+    reducer: override_ui.overrideUiReducer.debug(name: "overrideUi"),
     environment: override_ui.Environment());
 
 class Home extends StatelessWidget {

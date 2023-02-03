@@ -40,11 +40,12 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
             store: store ??
                 Store(
                     initialState: const State(count: 0),
-                    reducer: counterReducer,
+                    reducer: counterReducer.debug(name: "counter"),
                     environment: Environment()));
 
   @override
   Widget build(context, state, viewStore) {
+    print("CounterComponent build called");
     return Column(children: [
       Text(
         '${state.count}',
@@ -54,5 +55,11 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
           onPressed: () => viewStore.send(IncrementCounterByOne()),
           child: const Text("increment"))
     ]);
+  }
+
+  @override
+  void dispose() {
+    print("Counter dispose() called");
+    super.dispose();
   }
 }

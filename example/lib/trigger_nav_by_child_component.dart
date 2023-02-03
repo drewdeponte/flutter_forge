@@ -57,11 +57,13 @@ class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
             store: store ??
                 Store(
                     initialState: const State(),
-                    reducer: triggerNavByChildComponentReducer,
+                    reducer: triggerNavByChildComponentReducer.debug(
+                        name: "triggerNavByChildComponent"),
                     environment: Environment()));
 
   @override
   Widget build(context, state, viewStore) {
+    print("TriggerNavByChildComponent build called");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Trigger Nav By Child Component'),
@@ -71,17 +73,26 @@ class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SomeButton(
-                store: store.scope(
+                store: store.scopeForwardActionsAndSyncState(
               toChildState: (state) => const some_button.State(),
+              fromChildState: (state, childState) => state,
               fromChildAction: (childAction) {
                 return ButtonPressed();
               },
               toChildEnvironment: (_) => some_button.Environment(),
+              childReducer:
+                  some_button.someButtonReducer.debug(name: "someButton"),
             ))
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("TriggerNavByChildComponent dispose() called");
+    super.dispose();
   }
 }
 
@@ -90,6 +101,7 @@ class AnotherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("AnotherPage build called");
     return Scaffold(
       appBar: AppBar(title: const Text('Another Page')),
       body: Center(

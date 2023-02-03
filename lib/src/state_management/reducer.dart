@@ -6,6 +6,19 @@ class Reducer<S extends Equatable, E, A extends ReducerAction> {
   Reducer(this.run);
   final ReducerTuple<S, E, A> Function(S state, A action) run;
 
+  Reducer<S, E, A> debug({String? name}) {
+    return Reducer<S, E, A>((S state, A action) {
+      final displayName = name ?? "";
+      print("${displayName}Reducer received");
+      print("  action: $action");
+      print("  state: $state");
+      final newReducerTuple = this.run(state, action);
+      print("and computed");
+      print("  state: ${newReducerTuple.state}");
+      return newReducerTuple;
+    });
+  }
+
   Reducer<PS, PE, PA>
       pullback<PS extends Equatable, PE, PA extends ReducerAction>(
           {required S Function(PS) toChildState,

@@ -40,10 +40,17 @@ class SomeButton extends ComponentWidget<State, Environment, SomeButtonAction> {
 
   @override
   Widget build(context, state, viewStore) {
+    print("SomeButton build called");
     return Column(children: [
       ElevatedButton(
           onPressed: () => viewStore.send(ButtonPressed()),
           child: const Text('Some Button')),
     ]);
+  }
+
+  @override
+  void dispose() {
+    print("SomeButton dispose() called");
+    super.dispose();
   }
 }

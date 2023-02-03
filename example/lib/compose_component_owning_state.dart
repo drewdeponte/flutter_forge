@@ -38,6 +38,7 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment,
 
   @override
   Widget build(context, state, viewStore) {
+    print("ComposeComponentOwningState build called");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Compose Component Owning State'),
@@ -55,5 +56,11 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("ComposeComponentOwningState dispose() called");
+    super.dispose();
   }
 }

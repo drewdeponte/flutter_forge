@@ -16,7 +16,8 @@ class CounterWithOverridenUi extends counter.Counter {
             store: store ??
                 Store(
                     initialState: const counter.State(count: 0),
-                    reducer: counter.counterReducer,
+                    reducer: counter.counterReducer
+                        .debug(name: "CounterWithOverridenUi"),
                     environment: counter.Environment()));
 
   @override
@@ -69,6 +70,7 @@ class OverrideUiComponent
 
   @override
   Widget build(context, state, viewStore) {
+    print("OverrideUiComponent build called");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Override Ui Component'),
@@ -86,5 +88,11 @@ class OverrideUiComponent
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("OverrideUiComponent dispose() called");
+    super.dispose();
   }
 }

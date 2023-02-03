@@ -34,7 +34,7 @@ class Store<S extends Equatable, E, A extends ReducerAction>
 
   @override
   StoreInterface<CS, CE, CA>
-      scope<CS extends Equatable, CA extends ReducerAction, CE>(
+      scopeParentHandles<CS extends Equatable, CA extends ReducerAction, CE>(
           {required CS Function(S) toChildState,
           required A Function(CA) fromChildAction,
           required CE Function(E) toChildEnvironment}) {
@@ -57,12 +57,15 @@ class Store<S extends Equatable, E, A extends ReducerAction>
 
     // Handle state changing in the parent and it updating the child
     final weakChildStore = WeakReference(childStore);
+    final weakParentStore = WeakReference(this);
     final syncParentToChildState = () {
       if (isDueToChildAction) {
         return;
       } else {
-        weakChildStore.target?.viewStore.state =
-            toChildState(this.viewStore.state);
+        if (weakChildStore.target != null && weakParentStore.target != null) {
+          weakChildStore.target!.viewStore.state =
+              toChildState(weakParentStore.target!.viewStore.state);
+        }
       }
     };
 
@@ -72,5 +75,69 @@ class Store<S extends Equatable, E, A extends ReducerAction>
     _finalizer.attach(childStore, listenerViewStoreBinding, detach: childStore);
 
     return childStore;
+  }
+
+  StoreInterface<CS, CE, CA>
+      scopeSyncState<CS extends Equatable, CA extends ReducerAction, CE>(
+          {required CS Function(S) toChildState,
+          required S Function(S, CS) fromChildState,
+          required Reducer<CS, CE, CA> childReducer,
+          required CE Function(E) toChildEnvironment}) {
+    final childStore = Store(
+        initialState: toChildState(viewStore.state),
+        reducer: childReducer,
+        environment: toChildEnvironment(_environment));
+
+    final weakChildStore = WeakReference(childStore);
+    final weakParentStore = WeakReference(this);
+
+    // listen to parent and sync state to child
+    final syncParentToChildState = () {
+      if (weakChildStore.target != null && weakParentStore.target != null) {
+        weakChildStore.target!.viewStore.state =
+            toChildState(weakParentStore.target!.viewStore.state);
+      }
+    };
+    this.viewStore.addListener(syncParentToChildState);
+    final parentListenerViewStoreBinding = ListenerFunctionViewStoreBinding(
+        viewStore: this.viewStore, listenerFunction: syncParentToChildState);
+    _finalizer.attach(childStore, parentListenerViewStoreBinding,
+        detach: childStore);
+
+    // listen to child and sync state to the parent
+    final syncChildToParentState = () {
+      if (weakChildStore.target != null && weakParentStore.target != null) {
+        weakParentStore.target!.viewStore.state = fromChildState(
+            weakParentStore.target!.viewStore.state,
+            weakChildStore.target!.viewStore.state);
+      }
+    };
+    childStore.viewStore.addListener(syncChildToParentState);
+    final childListenerViewStoreBinding = ListenerFunctionViewStoreBinding(
+        viewStore: this.viewStore, listenerFunction: syncChildToParentState);
+    _finalizer.attach(this, childListenerViewStoreBinding, detach: this);
+
+    return childStore;
+  }
+
+  StoreInterface<CS, CE, CA> scopeForwardActionsAndSyncState<
+          CS extends Equatable, CA extends ReducerAction, CE>(
+      {required CS Function(S) toChildState,
+      required S Function(S, CS) fromChildState,
+      required A Function(CA) fromChildAction,
+      required Reducer<CS, CE, CA> childReducer,
+      required CE Function(E) toChildEnvironment}) {
+    final propagateActionReducer = Reducer<CS, CE, CA>((state, action) {
+      final reducerTuple = childReducer.run(state, action);
+      final parentAction = fromChildAction(action);
+      this.viewStore.send(parentAction);
+      return reducerTuple;
+    });
+
+    return this.scopeSyncState(
+        toChildState: toChildState,
+        fromChildState: fromChildState,
+        childReducer: propagateActionReducer,
+        toChildEnvironment: toChildEnvironment);
   }
 }
