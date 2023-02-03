@@ -35,8 +35,10 @@ class ViewStore<S extends Equatable, E, A extends ReducerAction>
   }
 
   set state(S newState) {
-    _state = newState;
-    notifyListeners();
+    if (newState != _state) {
+      _state = newState;
+      notifyListeners();
+    }
   }
 
   Listenable get listenable {
