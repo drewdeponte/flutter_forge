@@ -14,16 +14,15 @@ import 'package:equatable/equatable.dart';
 /// produces the new representation of state which the ViewStore then
 /// applies and notifies any observers of that state.
 class ViewStore<S extends Equatable, E, A extends ReducerAction>
-    extends ChangeNotifier implements ViewStoreInterface<S, A> {
+    extends ValueNotifier<S> implements ViewStoreInterface<S, A> {
   ViewStore({
     required S initialState,
     required Reducer<S, E, A> reducer,
     required E environment,
-  })  : _state = initialState,
-        _reducer = reducer,
-        _environment = environment;
+  })  : _reducer = reducer,
+        _environment = environment,
+        super(initialState);
 
-  S _state;
   final Reducer<S, E, A> _reducer;
   final E _environment;
   final Queue<A> _actionQueue = Queue();
@@ -31,14 +30,11 @@ class ViewStore<S extends Equatable, E, A extends ReducerAction>
   bool _isSending = false;
 
   S get state {
-    return _state;
+    return value;
   }
 
   set state(S newState) {
-    if (newState != _state) {
-      _state = newState;
-      notifyListeners();
-    }
+    value = newState;
   }
 
   Listenable get listenable {
@@ -64,11 +60,11 @@ class ViewStore<S extends Equatable, E, A extends ReducerAction>
       // TODO: add some sort of hook for logging here
       // Fimber.d('send($action): begin:');
 
-      final reducerTuple = _reducer.run(_state, action);
-      this.state = reducerTuple.state;
+      final reducerTuple = _reducer.run(value, action);
+      this.value = reducerTuple.state;
       try {
         reducerTuple.effectTasks.forEach((effectTask) {
-          effectTask.run(_state, _environment, context).then((optionalAction) {
+          effectTask.run(state, _environment, context).then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }

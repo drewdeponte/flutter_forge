@@ -37,10 +37,10 @@ class _ComponentState<S extends Equatable, E, A extends ReducerAction>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: store.viewStore.listenable,
-        builder: (context, child) {
-          return widget.build(context, store.viewStore.state, store.viewStore);
+    return ValueListenableBuilder(
+        valueListenable: store.viewStore,
+        builder: (context, state, child) {
+          return widget.build(context, state, store.viewStore);
         });
   }
 
