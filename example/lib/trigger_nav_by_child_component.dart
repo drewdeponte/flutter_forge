@@ -2,7 +2,6 @@ library trigger_nav_by_child_component;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
-import 'package:flutter_riverpod_composable_arch/some_button.dart';
 import 'package:equatable/equatable.dart';
 
 import 'some_button.dart' as some_button;
@@ -72,7 +71,7 @@ class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SomeButton(
+            some_button.SomeButton(
                 store: store.scopeForwardActionsAndSyncState(
               toChildState: (state) => const some_button.State(),
               fromChildState: (state, childState) => state,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
-import 'package:flutter_riverpod_composable_arch/trigger_nav_by_child_component.dart';
-
+import 'trigger_nav_by_child_component.dart';
 import 'compose_with_parent_owning_state.dart'
     as compose_with_parent_owning_state;
 import 'compose_component_owning_state.dart' as compose_component_owning_state;
