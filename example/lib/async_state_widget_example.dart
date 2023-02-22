@@ -82,16 +82,17 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Column(children: [
-              store.loadAsyncStateWidget(
-                  loader: (_) => Future.delayed(
-                        const Duration(seconds: 5),
-                        () => const Foo("Woot woot!"),
-                      ),
-                  toChildState: (s) => s.foo,
-                  fromChildState: (s, cs) => AsyncStateWidgetExampleState(
-                        foo: cs,
-                        count: s.count,
-                      )),
+              AsyncStateWidget(
+                  store: store.scopeAsyncStateSync(
+                      loader: (_) => Future.delayed(
+                            const Duration(seconds: 5),
+                            () => const Foo("Woot woot!"),
+                          ),
+                      toChildState: (s) => s.foo,
+                      fromChildState: (s, cs) => AsyncStateWidgetExampleState(
+                            foo: cs,
+                            count: s.count,
+                          ))),
               state.foo.when(
                   initial: () => const Text('Foo Initial'),
                   loading: () => const Text('Loading...'),

@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 
-import 'async_state.dart';
-import 'async_state_widget.dart';
 import 'state_management/reducer_action.dart';
 import 'state_management/view_store_interface.dart';
 import 'state_management/reducer.dart';
-import 'package:equatable/equatable.dart';
+import 'async_state.dart';
+import 'async_state_widget.dart';
 
 /// Formal Interface for all Store implementations
 abstract class StoreInterface<S extends Equatable, E, A extends ReducerAction> {
@@ -34,15 +34,15 @@ abstract class StoreInterface<S extends Equatable, E, A extends ReducerAction> {
       required Reducer<CS, CE, CA> childReducer,
       required CE Function(E) toChildEnvironment});
 
-  AsyncStateWidget<T, E> loadAsyncStateWidget<T extends Equatable>(
-      {required FutureOr<T> Function(E) loader,
-      required AsyncState<T> Function(S) toChildState,
-      required S Function(S, AsyncState<T>) fromChildState}) {
-    return AsyncStateWidget(
-        store: this.scopeSyncState(
-            toChildState: toChildState,
-            fromChildState: fromChildState,
-            childReducer: asyncStateReducer(loader),
-            toChildEnvironment: (env) => env));
+  StoreInterface<AsyncState<T>, E, AsyncStateAction>
+      scopeAsyncStateSync<T extends Equatable, CA extends ReducerAction, CE>(
+          {required FutureOr<T> Function(E) loader,
+          required AsyncState<T> Function(S) toChildState,
+          required S Function(S, AsyncState<T>) fromChildState}) {
+    return this.scopeSyncState(
+        toChildState: toChildState,
+        fromChildState: fromChildState,
+        childReducer: asyncStateReducer(loader),
+        toChildEnvironment: (env) => env);
   }
 }
