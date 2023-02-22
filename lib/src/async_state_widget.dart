@@ -27,7 +27,7 @@ class AsyncStateLoadFailedAction extends AsyncStateAction {
   AsyncStateLoadFailedAction(this.error, this.stackTrace);
 }
 
-class AsyncStateLoadResetAction extends AsyncStateAction {}
+class AsyncStateResetAction extends AsyncStateAction {}
 
 // Reducer
 Reducer<AsyncState<T>, E, AsyncStateAction>
@@ -51,7 +51,7 @@ Reducer<AsyncState<T>, E, AsyncStateAction>
     } else if (action is AsyncStateLoadFailedAction) {
       return ReducerTuple(
           AsyncState.error(action.error, action.stackTrace), []);
-    } else if (action is AsyncStateLoadResetAction) {
+    } else if (action is AsyncStateResetAction) {
       return ReducerTuple(AsyncState.initial(), []);
     } else {
       return ReducerTuple(state, []);
