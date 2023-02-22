@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'async_state.dart';
+import 'async_state_widget.dart';
 import 'state_management/reducer_action.dart';
 import 'state_management/view_store_interface.dart';
 import 'state_management/reducer.dart';
@@ -29,4 +33,16 @@ abstract class StoreInterface<S extends Equatable, E, A extends ReducerAction> {
       required A Function(CA) fromChildAction,
       required Reducer<CS, CE, CA> childReducer,
       required CE Function(E) toChildEnvironment});
+
+  AsyncStateWidget<T, E> loadAsyncStateWidget<T extends Equatable>(
+      {required FutureOr<T> Function(E) loader,
+      required AsyncState<T> Function(S) toChildState,
+      required S Function(S, AsyncState<T>) fromChildState}) {
+    return AsyncStateWidget(
+        store: this.scopeSyncState(
+            toChildState: toChildState,
+            fromChildState: fromChildState,
+            childReducer: asyncStateReducer(loader),
+            toChildEnvironment: (env) => env));
+  }
 }
