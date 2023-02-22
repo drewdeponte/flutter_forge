@@ -5,6 +5,7 @@ import 'compose_with_parent_owning_state.dart'
     as compose_with_parent_owning_state;
 import 'compose_component_owning_state.dart' as compose_component_owning_state;
 import 'load_on_component_init.dart' as load_on_component_init;
+import 'async_state_widget_example.dart' as async_state_widget_example;
 import 'override_ui.dart' as override_ui;
 
 void main() {
@@ -109,6 +110,19 @@ class Home extends StatelessWidget {
                         builder: (context) => TriggerNavByChildComponent()));
               },
               child: const Text('Trigger Nav by Child Component'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => async_state_widget_example
+                            .AsyncStateWidgetExampleComponentWidget()));
+              },
+              child: const Text('AsyncStateWidget Example'),
             ),
           ),
         ])));
