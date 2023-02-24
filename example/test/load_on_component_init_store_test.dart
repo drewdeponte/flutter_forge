@@ -30,5 +30,25 @@ void main() {
       expect(results[1].state,
           const load_on_component_init.State(name: 'FooName', count: 0));
     });
+
+    test('when sent Increment action it increments the count', () async {
+      final store = TestStore(
+          initialState:
+              const load_on_component_init.State(name: "bob", count: 0),
+          reducer: load_on_component_init.loadOnComponentInitReducer,
+          environment:
+              load_on_component_init.Environment(getName: () => 'FooName'));
+
+      final results = await store.send(load_on_component_init.Increment());
+
+      // Verify that one action was received with it's associated state
+      expect(results.length, 1);
+
+      // Verify that the first action received was the Increment action
+      expect(results[0].action is load_on_component_init.Increment, true);
+      // Verify that the first action resulted in the expected State
+      expect(results[0].state,
+          const load_on_component_init.State(name: 'bob', count: 1));
+    });
   });
 }
