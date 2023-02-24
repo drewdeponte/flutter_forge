@@ -8,3 +8,4 @@ export 'src/store_interface.dart';
 export 'src/component_widget.dart';
 export 'src/async_state.dart';
 export 'src/async_state_widget.dart';
+export 'src/test_store.dart';
