@@ -1,5 +1,7 @@
 library load_on_component_init;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:equatable/equatable.dart';
@@ -16,14 +18,17 @@ class State extends Equatable {
   List<Object> get props => [count, name];
 }
 
-class Environment {}
+class Environment {
+  FutureOr<String> Function() getName;
+  Environment({required this.getName});
+}
 
 // Effect Tasks
 final loadNameEffect =
     EffectTask<State, Environment, LoadOnComponentInitAction>(
-        (state, environment, context) {
-  return Future.delayed(const Duration(seconds: 5), () {})
-      .then((_) => SetName("The Loaded Name"));
+        (state, environment, context) async {
+  final name = await environment.getName();
+  return SetName(name);
 });
 
 // Actions
@@ -66,7 +71,10 @@ class LoadOnInitComponentWidget
                     initialState: const State(count: 0, name: "Initial"),
                     reducer: loadOnComponentInitReducer.debug(
                         name: "loadOnComponentInit"),
-                    environment: Environment()));
+                    environment: Environment(
+                        getName: () => Future.delayed(
+                            const Duration(seconds: 5),
+                            () => 'The Loaded Name'))));
 
   @override
   void postInitState(viewStore) {
