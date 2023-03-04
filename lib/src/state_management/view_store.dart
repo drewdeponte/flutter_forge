@@ -52,6 +52,12 @@ class ViewStore<S extends Equatable, E, A extends ReducerAction>
     _processQueue();
   }
 
+  void listen(void Function(S state) listener) {
+    addListener(() {
+      listener(value);
+    });
+  }
+
   Future<void> _processQueue() async {
     _isSending = true;
 

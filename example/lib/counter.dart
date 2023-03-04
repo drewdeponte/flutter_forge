@@ -47,6 +47,10 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
   Widget build(context, viewStore) {
     print("CounterComponent build called");
 
+    viewStore.listen((state) {
+      print("Listened to state change: ${state.count}");
+    });
+
     return Column(children: [
       Rebuilder(store, (context, state, child) {
         return Text(
