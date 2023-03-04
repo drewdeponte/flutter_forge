@@ -44,13 +44,16 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
                     environment: Environment()));
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     print("CounterComponent build called");
+
     return Column(children: [
-      Text(
-        '${state.count}',
-        style: Theme.of(context).textTheme.headline4,
-      ),
+      Rebuilder(store, (context, state, child) {
+        return Text(
+          '${state.count}',
+          style: Theme.of(context).textTheme.headline4,
+        );
+      }),
       OutlinedButton(
           onPressed: () => viewStore.send(IncrementCounterByOne()),
           child: const Text("increment"))

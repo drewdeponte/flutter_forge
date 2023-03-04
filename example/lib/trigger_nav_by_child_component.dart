@@ -61,7 +61,7 @@ class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
                     environment: Environment()));
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     print("TriggerNavByChildComponent build called");
     return Scaffold(
       appBar: AppBar(

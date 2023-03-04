@@ -71,7 +71,7 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
                     environment: AsyncStateWidgetExampleEnvironment()));
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     print("AsyncStateWidgetExampleComponentWidget build called");
     return Scaffold(
       appBar: AppBar(
@@ -93,15 +93,19 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
                             foo: cs,
                             count: s.count,
                           ))),
-              state.foo.when(
-                  initial: () => const Text('Foo Initial'),
-                  loading: () => const Text('Loading...'),
-                  data: (v) => Text('data = $v'),
-                  error: (e, __) => Text('error = ${e.toString()}')),
-              Text(
-                '${state.count}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
+              Rebuilder(store, (context, state, child) {
+                return Column(children: [
+                  state.foo.when(
+                      initial: () => const Text('Foo Initial'),
+                      loading: () => const Text('Loading...'),
+                      data: (v) => Text('data = $v'),
+                      error: (e, __) => Text('error = ${e.toString()}')),
+                  Text(
+                    '${state.count}',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ]);
+              }),
               OutlinedButton(
                   onPressed: () =>
                       viewStore.send(AsyncStateWidgetExampleIncrementAction()),

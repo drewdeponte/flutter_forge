@@ -39,7 +39,7 @@ class SomeButton extends ComponentWidget<State, Environment, SomeButtonAction> {
                     environment: Environment()));
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     print("SomeButton build called");
     return Column(children: [
       ElevatedButton(

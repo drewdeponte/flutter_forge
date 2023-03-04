@@ -37,7 +37,7 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment,
   const ComposeComponentOwningState({super.key, required super.store});
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     print("ComposeComponentOwningState build called");
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +47,7 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(state.name),
+            Rebuilder(store, (context, state, child) => Text(state.name)),
             counter.Counter(),
             TextButton(
                 onPressed: () => viewStore.send(AppendYourMom()),

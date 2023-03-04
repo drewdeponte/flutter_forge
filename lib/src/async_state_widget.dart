@@ -73,7 +73,7 @@ class AsyncStateWidget<T extends Equatable, E>
   }
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     return SizedBox(width: 0, height: 0);
   }
 }

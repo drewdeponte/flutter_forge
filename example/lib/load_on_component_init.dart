@@ -82,7 +82,7 @@ class LoadOnInitComponentWidget
   }
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     print("LoadOnInitComponentWidget build called");
     return Scaffold(
       appBar: AppBar(
@@ -92,16 +92,18 @@ class LoadOnInitComponentWidget
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Column(children: [
-              Text(state.name),
-              Text(
-                '${state.count}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              OutlinedButton(
-                  onPressed: () => viewStore.send(Increment()),
-                  child: const Text("increment"))
-            ])
+            Rebuilder(store, (context, state, child) {
+              return Column(children: [
+                Text(state.name),
+                Text(
+                  '${state.count}',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                OutlinedButton(
+                    onPressed: () => viewStore.send(Increment()),
+                    child: const Text("increment"))
+              ]);
+            })
           ],
         ),
       ),

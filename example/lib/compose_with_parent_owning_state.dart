@@ -60,7 +60,7 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
                     environment: Environment()));
 
   @override
-  Widget build(context, state, viewStore) {
+  Widget build(context, viewStore) {
     print("ComposeWithParentOwningState build called");
     return Scaffold(
       appBar: AppBar(
