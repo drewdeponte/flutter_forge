@@ -54,7 +54,10 @@ import 'package:equatable/equatable.dart';
 /// widget tree. This is more and more important as you do more composition.
 abstract class ComponentWidget<S extends Equatable, E, A extends ReducerAction>
     extends StatefulWidget {
-  const ComponentWidget({super.key, required this.store});
+  const ComponentWidget({
+    super.key,
+    required this.store,
+  });
   final StoreInterface<S, E, A> store;
 
   /// Widget lifecycle method that can be overriden to facilitate
@@ -64,11 +67,15 @@ abstract class ComponentWidget<S extends Equatable, E, A extends ReducerAction>
   /// fetching of asynchronous state when a widget is created.
   void initState(ViewStoreInterface<S, A> viewStore) {}
 
-  /// Widget lifecycle method that cane be overriden to facilitate
+  /// Widget lifecycle method that can be overriden to facilitate
   /// performing actions after state initialization.
   ///
   /// This happens at the end of the frame.
   void postInitState(ViewStoreInterface<S, A> viewStore) {}
+
+  /// Widget lifecycle method that can be overiden to facilitate
+  /// performing actions when state has changed.
+  void listen(BuildContext context, S state) {}
 
   /// Widget lifecycle method that can be overriden to facilitate
   /// performing actions when the widget is disposed.
@@ -93,6 +100,7 @@ class _ComponentState<S extends Equatable, E, A extends ReducerAction>
   void initState() {
     super.initState();
     store.viewStore.context = context;
+    store.viewStore.addListener(_triggerListener);
     widget.initState(store.viewStore);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.postInitState(store.viewStore);
@@ -106,8 +114,13 @@ class _ComponentState<S extends Equatable, E, A extends ReducerAction>
 
   @override
   void dispose() {
+    store.viewStore.removeListener(_triggerListener);
     widget.dispose();
     super.dispose();
+  }
+
+  void _triggerListener() {
+    widget.listen(context, store.viewStore.state);
   }
 }
 

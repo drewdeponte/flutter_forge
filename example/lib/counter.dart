@@ -44,12 +44,17 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
                     environment: Environment()));
 
   @override
+  void listen(context, state) {
+    print("Listened to state change: ${state.count}");
+    const snackBar = SnackBar(
+      content: Text('Yay! A SnackBar!'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
   Widget build(context, viewStore) {
     print("CounterComponent build called");
-
-    viewStore.listen((state) {
-      print("Listened to state change: ${state.count}");
-    });
 
     return Column(children: [
       Rebuilder(store, (context, state, child) {

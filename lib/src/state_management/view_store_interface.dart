@@ -13,6 +13,4 @@ abstract class ViewStoreInterface<S extends Equatable, A extends ReducerAction>
 
   /// send/dispatch an action to the store to have it change state in a controlled manner
   void send(A action);
-
-  void listen(void Function(S state) listener);
 }
