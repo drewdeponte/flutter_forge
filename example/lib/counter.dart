@@ -43,14 +43,14 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
                     reducer: counterReducer.debug(name: "counter"),
                     environment: Environment()));
 
-  @override
-  void listen(context, state) {
-    print("Listened to state change: ${state.count}");
-    const snackBar = SnackBar(
-      content: Text('Yay! A SnackBar!'),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  // @override
+  // void listen(context, state) {
+  //   print("Listened to state change: ${state.count}");
+  //   const snackBar = SnackBar(
+  //     content: Text('Yay! A SnackBar!'),
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  // }
 
   @override
   Widget build(context, viewStore) {
