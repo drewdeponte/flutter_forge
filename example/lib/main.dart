@@ -6,10 +6,12 @@ import 'compose_with_parent_owning_state.dart'
 import 'compose_component_owning_state.dart' as compose_component_owning_state;
 import 'load_on_component_init.dart' as load_on_component_init;
 import 'async_state_widget_example.dart' as async_state_widget_example;
+import 'integrate_with_riverpod.dart' as integrate_with_riverpod;
 import 'override_ui.dart' as override_ui;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -123,6 +125,19 @@ class Home extends StatelessWidget {
                             .AsyncStateWidgetExampleComponentWidget()));
               },
               child: const Text('AsyncStateWidget Example'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const integrate_with_riverpod
+                            .MyRiverpodReadonlyWidget()));
+              },
+              child: const Text('IntegrateWithRiverpodComponentWidget Example'),
             ),
           ),
         ])));
