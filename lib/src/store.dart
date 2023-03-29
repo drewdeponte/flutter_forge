@@ -17,6 +17,7 @@ class Store<S extends Equatable, E, A extends ReducerAction>
             initialState: initialState,
             reducer: reducer,
             environment: environment);
+  @override
   final ViewStore<S, E, A> viewStore;
   final E _environment;
   static final Finalizer<ListenerFunctionViewStoreBinding> _finalizer =
@@ -35,8 +36,8 @@ class Store<S extends Equatable, E, A extends ReducerAction>
     final childReducer = Reducer<CS, CE, CA>((CS childState, CA childAction) {
       isDueToChildAction = true;
       final parentAction = fromChildAction(childAction);
-      this.viewStore.send(parentAction);
-      final newChildState = toChildState(this.viewStore.state);
+      viewStore.send(parentAction);
+      final newChildState = toChildState(viewStore.state);
       isDueToChildAction = false;
 
       return ReducerTuple(newChildState, []);
@@ -50,6 +51,7 @@ class Store<S extends Equatable, E, A extends ReducerAction>
     // Handle state changing in the parent and it updating the child
     final weakChildStore = WeakReference(childStore);
     final weakParentStore = WeakReference(this);
+    // ignore: prefer_function_declarations_over_variables
     final syncParentToChildState = () {
       if (isDueToChildAction) {
         return;
@@ -61,14 +63,15 @@ class Store<S extends Equatable, E, A extends ReducerAction>
       }
     };
 
-    this.viewStore.addListener(syncParentToChildState);
+    viewStore.addListener(syncParentToChildState);
     final listenerViewStoreBinding = ListenerFunctionViewStoreBinding(
-        viewStore: this.viewStore, listenerFunction: syncParentToChildState);
+        viewStore: viewStore, listenerFunction: syncParentToChildState);
     _finalizer.attach(childStore, listenerViewStoreBinding, detach: childStore);
 
     return childStore;
   }
 
+  @override
   StoreInterface<CS, CE, CA>
       scopeSyncState<CS extends Equatable, CA extends ReducerAction, CE>(
           {required CS Function(S) toChildState,
@@ -84,19 +87,21 @@ class Store<S extends Equatable, E, A extends ReducerAction>
     final weakParentStore = WeakReference(this);
 
     // listen to parent and sync state to child
+    // ignore: prefer_function_declarations_over_variables
     final syncParentToChildState = () {
       if (weakChildStore.target != null && weakParentStore.target != null) {
         weakChildStore.target!.viewStore.state =
             toChildState(weakParentStore.target!.viewStore.state);
       }
     };
-    this.viewStore.addListener(syncParentToChildState);
+    viewStore.addListener(syncParentToChildState);
     final parentListenerViewStoreBinding = ListenerFunctionViewStoreBinding(
-        viewStore: this.viewStore, listenerFunction: syncParentToChildState);
+        viewStore: viewStore, listenerFunction: syncParentToChildState);
     _finalizer.attach(childStore, parentListenerViewStoreBinding,
         detach: childStore);
 
     // listen to child and sync state to the parent
+    // ignore: prefer_function_declarations_over_variables
     final syncChildToParentState = () {
       if (weakChildStore.target != null && weakParentStore.target != null) {
         weakParentStore.target!.viewStore.state = fromChildState(
@@ -106,12 +111,13 @@ class Store<S extends Equatable, E, A extends ReducerAction>
     };
     childStore.viewStore.addListener(syncChildToParentState);
     final childListenerViewStoreBinding = ListenerFunctionViewStoreBinding(
-        viewStore: this.viewStore, listenerFunction: syncChildToParentState);
+        viewStore: viewStore, listenerFunction: syncChildToParentState);
     _finalizer.attach(this, childListenerViewStoreBinding, detach: this);
 
     return childStore;
   }
 
+  @override
   StoreInterface<CS, CE, CA> scopeForwardActionsAndSyncState<
           CS extends Equatable, CA extends ReducerAction, CE>(
       {required CS Function(S) toChildState,
@@ -122,11 +128,11 @@ class Store<S extends Equatable, E, A extends ReducerAction>
     final propagateActionReducer = Reducer<CS, CE, CA>((state, action) {
       final reducerTuple = childReducer.run(state, action);
       final parentAction = fromChildAction(action);
-      this.viewStore.send(parentAction);
+      viewStore.send(parentAction);
       return reducerTuple;
     });
 
-    return this.scopeSyncState(
+    return scopeSyncState(
         toChildState: toChildState,
         fromChildState: fromChildState,
         childReducer: propagateActionReducer,

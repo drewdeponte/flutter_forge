@@ -39,7 +39,7 @@ abstract class StoreInterface<S extends Equatable, E, A extends ReducerAction> {
           {required FutureOr<T> Function(E) loader,
           required AsyncState<T> Function(S) toChildState,
           required S Function(S, AsyncState<T>) fromChildState}) {
-    return this.scopeSyncState(
+    return scopeSyncState(
         toChildState: toChildState,
         fromChildState: fromChildState,
         childReducer: asyncStateReducer(loader),

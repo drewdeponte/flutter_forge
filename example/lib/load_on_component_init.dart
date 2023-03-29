@@ -83,6 +83,7 @@ class LoadOnInitComponentWidget
 
   @override
   Widget build(context, viewStore) {
+    // ignore: avoid_print
     print("LoadOnInitComponentWidget build called");
     return Scaffold(
       appBar: AppBar(
@@ -92,18 +93,20 @@ class LoadOnInitComponentWidget
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Rebuilder(store, (context, state, child) {
-              return Column(children: [
-                Text(state.name),
-                Text(
-                  '${state.count}',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-                OutlinedButton(
-                    onPressed: () => viewStore.send(Increment()),
-                    child: const Text("increment"))
-              ]);
-            })
+            Rebuilder(
+                store: store,
+                builder: (context, state, child) {
+                  return Column(children: [
+                    Text(state.name),
+                    Text(
+                      '${state.count}',
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    OutlinedButton(
+                        onPressed: () => viewStore.send(Increment()),
+                        child: const Text("increment"))
+                  ]);
+                })
           ],
         ),
       ),
@@ -112,6 +115,7 @@ class LoadOnInitComponentWidget
 
   @override
   void dispose() {
+    // ignore: avoid_print
     print("LoadOnInitComponentWidget dispose() called");
     super.dispose();
   }

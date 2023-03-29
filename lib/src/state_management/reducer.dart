@@ -9,11 +9,16 @@ class Reducer<S extends Equatable, E, A extends ReducerAction> {
   Reducer<S, E, A> debug({String? name}) {
     return Reducer<S, E, A>((S state, A action) {
       final displayName = name ?? "";
+      // ignore: avoid_print
       print("${displayName}Reducer received");
+      // ignore: avoid_print
       print("  action: $action");
+      // ignore: avoid_print
       print("  state: $state");
-      final newReducerTuple = this.run(state, action);
+      final newReducerTuple = run(state, action);
+      // ignore: avoid_print
       print("and computed");
+      // ignore: avoid_print
       print("  state: ${newReducerTuple.state}");
       return newReducerTuple;
     });
@@ -32,7 +37,7 @@ class Reducer<S extends Equatable, E, A extends ReducerAction> {
       if (optionalChildAction == null) {
         return ReducerTuple(state, []);
       } else {
-        final childReducerTuple = this.run(childState, optionalChildAction);
+        final childReducerTuple = run(childState, optionalChildAction);
 
         final newState = fromChildState(childReducerTuple.state);
 

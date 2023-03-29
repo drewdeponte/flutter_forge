@@ -45,14 +45,14 @@ Reducer<AsyncState<T>, E, AsyncStateAction>
 
   return Reducer<AsyncState<T>, E, AsyncStateAction>((state, action) {
     if (action is AsyncStateLoadAction) {
-      return ReducerTuple(AsyncState.loading(), [loadEffect]);
+      return ReducerTuple(const AsyncState.loading(), [loadEffect]);
     } else if (action is AsyncStateLoadCompleteAction<T>) {
       return ReducerTuple(AsyncState.data(action.value), []);
     } else if (action is AsyncStateLoadFailedAction) {
       return ReducerTuple(
           AsyncState.error(action.error, action.stackTrace), []);
     } else if (action is AsyncStateResetAction) {
-      return ReducerTuple(AsyncState.initial(), []);
+      return ReducerTuple(const AsyncState.initial(), []);
     } else {
       return ReducerTuple(state, []);
     }
@@ -60,9 +60,10 @@ Reducer<AsyncState<T>, E, AsyncStateAction>
 }
 
 // Widget
+@immutable
 class AsyncStateWidget<T extends Equatable, E>
     extends ComponentWidget<AsyncState<T>, E, AsyncStateAction> {
-  AsyncStateWidget(
+  const AsyncStateWidget(
       {super.key,
       required StoreInterface<AsyncState<T>, E, AsyncStateAction> store})
       : super(store: store);
@@ -74,6 +75,6 @@ class AsyncStateWidget<T extends Equatable, E>
 
   @override
   Widget build(context, viewStore) {
-    return SizedBox(width: 0, height: 0);
+    return const SizedBox(width: 0, height: 0);
   }
 }

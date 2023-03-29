@@ -26,17 +26,21 @@ class ViewStore<S extends Equatable, E, A extends ReducerAction>
   final Reducer<S, E, A> _reducer;
   final E _environment;
   final Queue<A> _actionQueue = Queue();
+  @override
   BuildContext? context;
   bool _isSending = false;
 
+  @override
   S get state {
     return value;
   }
 
+  @override
   set state(S newState) {
     value = newState;
   }
 
+  @override
   Listenable get listenable {
     return this;
   }
@@ -57,23 +61,20 @@ class ViewStore<S extends Equatable, E, A extends ReducerAction>
 
     while (_actionQueue.isNotEmpty) {
       final action = _actionQueue.removeLast();
-      // TODO: add some sort of hook for logging here
-      // Fimber.d('send($action): begin:');
 
       final reducerTuple = _reducer.run(value, action);
-      this.value = reducerTuple.state;
+      value = reducerTuple.state;
       try {
-        reducerTuple.effectTasks.forEach((effectTask) {
+        for (final effectTask in reducerTuple.effectTasks) {
           effectTask.run(state, _environment, context).then((optionalAction) {
             if (optionalAction != null) {
               send(optionalAction);
             }
           });
-        });
+        }
       } catch (error) {
+        // ignore: avoid_print
         print("Error while processing effects: $error");
-        // TODO: add some sort of hook for logging here
-        // Fimber.d('error executing action: $action\nerror: $error');
       }
     }
 

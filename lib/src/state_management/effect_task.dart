@@ -16,7 +16,7 @@ class EffectTask<S extends Equatable, E, A extends ReducerAction> {
     required BuildContext? Function(BuildContext?) toChildContext,
   }) {
     return EffectTask((parentState, parentEnv, parentContext) async {
-      final optionalAction = await this.run(
+      final optionalAction = await run(
         toChildState(parentState),
         toChildEnvironment(parentEnv),
         toChildContext(parentContext),

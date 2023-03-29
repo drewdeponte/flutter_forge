@@ -72,6 +72,7 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
 
   @override
   Widget build(context, viewStore) {
+    // ignore: avoid_print
     print("AsyncStateWidgetExampleComponentWidget build called");
     return Scaffold(
       appBar: AppBar(
@@ -93,19 +94,21 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
                             foo: cs,
                             count: s.count,
                           ))),
-              Rebuilder(store, (context, state, child) {
-                return Column(children: [
-                  state.foo.when(
-                      initial: () => const Text('Foo Initial'),
-                      loading: () => const Text('Loading...'),
-                      data: (v) => Text('data = $v'),
-                      error: (e, __) => Text('error = ${e.toString()}')),
-                  Text(
-                    '${state.count}',
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                ]);
-              }),
+              Rebuilder(
+                  store: store,
+                  builder: (context, state, child) {
+                    return Column(children: [
+                      state.foo.when(
+                          initial: () => const Text('Foo Initial'),
+                          loading: () => const Text('Loading...'),
+                          data: (v) => Text('data = $v'),
+                          error: (e, __) => Text('error = ${e.toString()}')),
+                      Text(
+                        '${state.count}',
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ]);
+                  }),
               OutlinedButton(
                   onPressed: () =>
                       viewStore.send(AsyncStateWidgetExampleIncrementAction()),
@@ -119,6 +122,7 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
 
   @override
   void dispose() {
+    // ignore: avoid_print
     print("AsyncStateWidgetExampleComponentWidget dispose() called");
     super.dispose();
   }

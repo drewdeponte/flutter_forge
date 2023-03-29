@@ -34,14 +34,14 @@ class TestStore<S extends Equatable, E, A extends ReducerAction,
     List<ActionStateTuple<A, S>> actionStateTuples = [];
 
     final reducerTuple = _reducer.run(_state, action);
-    this._state = reducerTuple.state;
+    _state = reducerTuple.state;
     actionStateTuples.add(ActionStateTuple(action, reducerTuple.state));
 
     await Future.forEach(reducerTuple.effectTasks, (effectTask) async {
       final optionalAction = await effectTask.run(_state, _environment, null);
       if (optionalAction != null) {
         final reducerTuple = _reducer.run(_state, optionalAction);
-        this._state = reducerTuple.state;
+        _state = reducerTuple.state;
         actionStateTuples
             .add(ActionStateTuple(optionalAction, reducerTuple.state));
       }

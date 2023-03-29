@@ -88,6 +88,7 @@ abstract class ComponentWidget<S extends Equatable, E, A extends ReducerAction>
   Widget build(BuildContext context, ViewStoreInterface<S, A> viewStore);
 
   @override
+  // ignore: no_logic_in_create_state
   createState() => _ComponentState(store);
 }
 
@@ -130,18 +131,19 @@ class _ComponentState<S extends Equatable, E, A extends ReducerAction>
 /// [ComponentWidget] to scope rebuilding down to a specific section of
 /// the widget tree. This is because the [ComponentWidget] does not
 /// automatically rebuild on state change for performance reasons.
+@immutable
 class Rebuilder<S extends Equatable, E, A extends ReducerAction>
     extends StatelessWidget {
   final StoreInterface<S, E, A> store;
   final Widget Function(BuildContext context, S state, Widget? child) builder;
-  Rebuilder(this.store, this.builder);
+  const Rebuilder({super.key, required this.store, required this.builder});
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: store.viewStore,
         builder: (context, state, child) {
-          return this.builder(context, state, child);
+          return builder(context, state, child);
         });
   }
 }

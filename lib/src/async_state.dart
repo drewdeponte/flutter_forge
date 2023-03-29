@@ -23,14 +23,14 @@ abstract class AsyncState<T extends Equatable> extends Equatable {
     required R Function(T data) data,
     required R Function(Object error, StackTrace stackTrace) error,
   }) {
-    if (this.isInitial) {
+    if (isInitial) {
       return initial();
-    } else if (this.isLoading) {
+    } else if (isLoading) {
       return loading();
-    } else if (this.hasError) {
-      return error(this.error!, this.stackTrace!);
+    } else if (hasError) {
+      return error(error, stackTrace!);
     } else {
-      return data(this.value!);
+      return data(value!);
     }
   }
 }
@@ -38,30 +38,37 @@ abstract class AsyncState<T extends Equatable> extends Equatable {
 class AsyncStateInitial<T extends Equatable> extends AsyncState<T> {
   const AsyncStateInitial() : super._();
 
+  @override
   bool get isInitial {
     return true;
   }
 
+  @override
   bool get isLoading {
     return false;
   }
 
+  @override
   bool get hasValue {
     return false;
   }
 
+  @override
   T? get value {
     return null;
   }
 
+  @override
   bool get hasError {
     return false;
   }
 
+  @override
   Object? get error {
     return null;
   }
 
+  @override
   StackTrace? get stackTrace {
     return null;
   }
@@ -73,30 +80,37 @@ class AsyncStateInitial<T extends Equatable> extends AsyncState<T> {
 class AsyncStateLoading<T extends Equatable> extends AsyncState<T> {
   const AsyncStateLoading() : super._();
 
+  @override
   bool get isInitial {
     return false;
   }
 
+  @override
   bool get isLoading {
     return true;
   }
 
+  @override
   bool get hasValue {
     return false;
   }
 
+  @override
   T? get value {
     return null;
   }
 
+  @override
   bool get hasError {
     return false;
   }
 
+  @override
   Object? get error {
     return null;
   }
 
+  @override
   StackTrace? get stackTrace {
     return null;
   }
@@ -109,30 +123,37 @@ class AsyncStateData<T extends Equatable> extends AsyncState<T> {
   const AsyncStateData(this._value) : super._();
   final T _value;
 
+  @override
   bool get isInitial {
     return false;
   }
 
+  @override
   bool get isLoading {
     return false;
   }
 
+  @override
   bool get hasValue {
     return true;
   }
 
+  @override
   T? get value {
-    return this._value;
+    return _value;
   }
 
+  @override
   bool get hasError {
     return false;
   }
 
+  @override
   Object? get error {
     return null;
   }
 
+  @override
   StackTrace? get stackTrace {
     return null;
   }
@@ -146,32 +167,39 @@ class AsyncStateError<T extends Equatable> extends AsyncState<T> {
   final StackTrace _stackTrace;
   const AsyncStateError(this._error, this._stackTrace) : super._();
 
+  @override
   bool get isInitial {
     return false;
   }
 
+  @override
   bool get isLoading {
     return false;
   }
 
+  @override
   bool get hasValue {
     return false;
   }
 
+  @override
   T? get value {
     return null;
   }
 
+  @override
   bool get hasError {
     return true;
   }
 
+  @override
   Object? get error {
-    return this._error;
+    return _error;
   }
 
+  @override
   StackTrace? get stackTrace {
-    return this._stackTrace;
+    return _stackTrace;
   }
 
   @override

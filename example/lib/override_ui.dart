@@ -23,12 +23,14 @@ class CounterWithOverridenUi extends counter.Counter {
   @override
   Widget build(context, viewStore) {
     return Column(children: [
-      Rebuilder(store, (context, state, child) {
-        return Text(
-          '${state.count}',
-          style: Theme.of(context).textTheme.headline1,
-        );
-      }),
+      Rebuilder(
+          store: store,
+          builder: (context, state, child) {
+            return Text(
+              '${state.count}',
+              style: Theme.of(context).textTheme.headline1,
+            );
+          }),
       ElevatedButton(
           onPressed: () => viewStore.send(counter.IncrementCounterByOne()),
           child: const Text("overriden ui - increment"))
@@ -72,6 +74,7 @@ class OverrideUiComponent
 
   @override
   Widget build(context, viewStore) {
+    // ignore: avoid_print
     print("OverrideUiComponent build called");
     return Scaffold(
       appBar: AppBar(
@@ -81,7 +84,9 @@ class OverrideUiComponent
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Rebuilder(store, (context, state, child) => Text(state.name)),
+            Rebuilder(
+                store: store,
+                builder: (context, state, child) => Text(state.name)),
             CounterWithOverridenUi(),
             TextButton(
                 onPressed: () => viewStore.send(AppendYourMom()),
@@ -94,6 +99,7 @@ class OverrideUiComponent
 
   @override
   void dispose() {
+    // ignore: avoid_print
     print("OverrideUiComponent dispose() called");
     super.dispose();
   }

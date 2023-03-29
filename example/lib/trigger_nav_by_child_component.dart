@@ -62,6 +62,7 @@ class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
 
   @override
   Widget build(context, viewStore) {
+    // ignore: avoid_print
     print("TriggerNavByChildComponent build called");
     return Scaffold(
       appBar: AppBar(
@@ -90,6 +91,7 @@ class TriggerNavByChildComponent extends ComponentWidget<State, Environment,
 
   @override
   void dispose() {
+    // ignore: avoid_print
     print("TriggerNavByChildComponent dispose() called");
     super.dispose();
   }
@@ -100,6 +102,7 @@ class AnotherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: avoid_print
     print("AnotherPage build called");
     return Scaffold(
       appBar: AppBar(title: const Text('Another Page')),

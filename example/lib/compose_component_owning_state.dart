@@ -38,6 +38,7 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment,
 
   @override
   Widget build(context, viewStore) {
+    // ignore: avoid_print
     print("ComposeComponentOwningState build called");
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +48,9 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Rebuilder(store, (context, state, child) => Text(state.name)),
+            Rebuilder(
+                store: store,
+                builder: (context, state, child) => Text(state.name)),
             counter.Counter(),
             TextButton(
                 onPressed: () => viewStore.send(AppendYourMom()),
@@ -60,6 +63,7 @@ class ComposeComponentOwningState extends ComponentWidget<State, Environment,
 
   @override
   void dispose() {
+    // ignore: avoid_print
     print("ComposeComponentOwningState dispose() called");
     super.dispose();
   }

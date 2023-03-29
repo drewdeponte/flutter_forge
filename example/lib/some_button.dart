@@ -40,6 +40,7 @@ class SomeButton extends ComponentWidget<State, Environment, SomeButtonAction> {
 
   @override
   Widget build(context, viewStore) {
+    // ignore: avoid_print
     print("SomeButton build called");
     return Column(children: [
       ElevatedButton(
@@ -50,6 +51,7 @@ class SomeButton extends ComponentWidget<State, Environment, SomeButtonAction> {
 
   @override
   void dispose() {
+    // ignore: avoid_print
     print("SomeButton dispose() called");
     super.dispose();
   }

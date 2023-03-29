@@ -61,6 +61,7 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
 
   @override
   Widget build(context, viewStore) {
+    // ignore: avoid_print
     print("ComposeWithParentOwningState build called");
     return Scaffold(
       appBar: AppBar(
@@ -89,6 +90,7 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
 
   @override
   void dispose() {
+    // ignore: avoid_print
     print("ComposeWithParentOwningState dispose() called");
     super.dispose();
   }
