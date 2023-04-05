@@ -2,7 +2,7 @@ name: flutter_forge
 description: >
   A robust opinionated framework for building state based applications in a
   modular, testable, and composable style.
-version: 0.4.1
+version: 0.5.0
 homepage: https://github.com/uptech/flutter_forge
 repository: https://github.com/uptech/flutter_forge
 
