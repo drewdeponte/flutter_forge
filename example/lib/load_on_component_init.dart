@@ -93,20 +93,28 @@ class LoadOnInitComponentWidget
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Rebuilder(
+            SelectRebuilder(
                 store: store,
-                builder: (context, state, child) {
-                  return Column(children: [
-                    Text(state.name),
-                    Text(
-                      '${state.count}',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                    OutlinedButton(
-                        onPressed: () => viewStore.send(Increment()),
-                        child: const Text("increment"))
-                  ]);
-                })
+                select: (s) => s.name,
+                builder: (context, name, child) {
+                  // ignore: avoid_print
+                  print("rebuilding the name Text");
+                  return Text(name);
+                }),
+            SelectRebuilder(
+                store: store,
+                select: (s) => s.count,
+                builder: (context, count, child) {
+                  // ignore: avoid_print
+                  print("rebuilding the count Text");
+                  return Text(
+                    '$count',
+                    style: Theme.of(context).textTheme.headline4,
+                  );
+                }),
+            OutlinedButton(
+                onPressed: () => viewStore.send(Increment()),
+                child: const Text("increment"))
           ],
         ),
       ),

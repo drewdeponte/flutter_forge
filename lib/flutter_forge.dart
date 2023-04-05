@@ -9,3 +9,5 @@ export 'src/component_widget.dart';
 export 'src/async_state.dart';
 export 'src/async_state_widget.dart';
 export 'src/test_store.dart';
+export 'src/rebuilder.dart';
+export 'src/select_rebuilder.dart';
