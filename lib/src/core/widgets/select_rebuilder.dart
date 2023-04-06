@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'store_interface.dart';
-import 'state_management/reducer_action.dart';
+import '../state_management/store_interface.dart';
+import '../state_management/reducer_action.dart';
 import 'package:equatable/equatable.dart';
-import 'selected_value_notifier.dart';
+import '../../utils/selected_value_notifier.dart';
 
 /// Rebuild a portion of the widget tree when a selected portion of state changes.
 ///

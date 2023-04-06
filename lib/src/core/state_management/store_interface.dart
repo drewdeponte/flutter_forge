@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
 
-import 'state_management/reducer_action.dart';
-import 'state_management/view_store_interface.dart';
-import 'state_management/reducer.dart';
-import 'async_state.dart';
-import 'async_state_widget.dart';
+import 'reducer_action.dart';
+import 'view_store_interface.dart';
+import 'reducer.dart';
+
+// TODO: It feels weird that within core we are accessing and using something from the convenience layer.
+// We should probably rethink this. Maybe we don't need it here or we aren't using that scopeAsyncStateSync()
+// function anymore. Or maybe it should be mixed in somehow but live completely in the convenience area.
+import '../../convenience/async_state.dart';
+import '../../convenience/async_state_widget.dart';
 
 /// Formal Interface for all Store implementations
 abstract class StoreInterface<S extends Equatable, E, A extends ReducerAction> {

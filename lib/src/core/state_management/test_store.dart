@@ -1,5 +1,5 @@
-import 'state_management/reducer_action.dart';
-import 'state_management/reducer.dart';
+import 'reducer_action.dart';
+import 'reducer.dart';
 import 'package:equatable/equatable.dart';
 
 class ActionStateTuple<A extends ReducerAction, S extends Equatable> {

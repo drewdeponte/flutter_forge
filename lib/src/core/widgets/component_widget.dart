@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'store_interface.dart';
-import 'state_management/view_store_interface.dart';
-import 'state_management/reducer_action.dart';
+import '../state_management/store_interface.dart';
+import '../state_management/view_store_interface.dart';
+import '../state_management/reducer_action.dart';
 import 'package:equatable/equatable.dart';
 
 /// Base intended to be extended to create the widget portion of a Flutter

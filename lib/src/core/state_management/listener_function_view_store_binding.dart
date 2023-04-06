@@ -1,5 +1,5 @@
-import 'state_management/reducer_action.dart';
-import 'state_management/view_store.dart';
+import 'reducer_action.dart';
+import 'view_store.dart';
 import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
 

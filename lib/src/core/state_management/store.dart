@@ -1,8 +1,8 @@
 import 'store_interface.dart';
-import 'state_management/reducer_action.dart';
-import 'state_management/view_store.dart';
-import 'state_management/reducer.dart';
-import 'state_management/reducer_tuple.dart';
+import 'reducer_action.dart';
+import 'view_store.dart';
+import 'reducer.dart';
+import 'reducer_tuple.dart';
 import 'listener_function_view_store_binding.dart';
 import 'package:equatable/equatable.dart';
 

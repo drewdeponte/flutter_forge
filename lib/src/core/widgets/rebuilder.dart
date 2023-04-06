@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'store_interface.dart';
-import 'state_management/reducer_action.dart';
+import '../state_management/store_interface.dart';
+import '../state_management/reducer_action.dart';
 import 'package:equatable/equatable.dart';
 
 /// Rebuild a portion of the widget tree when state changes.

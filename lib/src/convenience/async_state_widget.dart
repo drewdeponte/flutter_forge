@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
 
-import 'state_management/effect_task.dart';
-import 'state_management/reducer.dart';
-import 'state_management/reducer_action.dart';
-import 'state_management/reducer_tuple.dart';
-import 'store_interface.dart';
-import 'component_widget.dart';
+import '../core/state_management/effect_task.dart';
+import '../core/state_management/reducer.dart';
+import '../core/state_management/reducer_action.dart';
+import '../core/state_management/reducer_tuple.dart';
+import '../core/state_management/store_interface.dart';
+import '../core/widgets/component_widget.dart';
 import 'async_state.dart';
 
 // Actions
