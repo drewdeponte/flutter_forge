@@ -125,16 +125,6 @@ class CountNotifier extends Notifier<State> {
 final countNotifierProvider =
     NotifierProvider<CountNotifier, State>(CountNotifier.new);
 
-Reducer<S, E, A>
-    riverpodReducer<S extends Equatable, E, A extends ReducerAction>(
-        WidgetRef ref,
-        Function(WidgetRef ref, S state, A action) actionHandler) {
-  return Reducer((state, action) {
-    actionHandler(ref, state, action);
-    return ReducerTuple(state, []);
-  });
-}
-
 ourRiverpodActionHandler(
     WidgetRef ref, State state, IntegrateWithRiverpodAction action) {
   if (action is Increment) {
@@ -142,25 +132,62 @@ ourRiverpodActionHandler(
   }
 }
 
-// Read-only case
+/// Use a Flutter Forge component inside a Riverpod widget
+///
+/// This is a RiverpodWidget that wraps a Flutter Forge component and
+/// provides the interface to define the mapping between the Flutter Forge
+/// components Actions & State to Riverpod side of the would while also
+/// observing the provided provider for changes and rebuilding the Flutter
+/// Forge component when it changes.
+///
+/// provider - the Riverpod provider that will be observed for state changes and propagated to the Flutter Forge component
+/// actionHandler - function responsible for interpreting the State and Action and handling it, could be by calling a Riverpod Notifier method, or anything
+/// environment - the environment of the Flutter Forge component to faciliate dependency injection
+/// reducer - optionally provider a Flutter Forge reducer for the component if you want its default logic, otherwise only the actionHandler will be used
+@immutable
+class RiverpodWrappedFlutterForgeComponent<S extends Equatable, E,
+    A extends ReducerAction> extends ConsumerWidget {
+  final ProviderBase<S> provider;
+  final Reducer<S, E, A>? reducer;
+  final Function(WidgetRef ref, S state, A action) actionHandler;
+  final E environment;
+  final ComponentWidget<S, E, A> Function(Store<S, E, A> store) builder;
+
+  const RiverpodWrappedFlutterForgeComponent(
+      {super.key,
+      required this.provider,
+      required this.actionHandler,
+      required this.environment,
+      this.reducer,
+      required this.builder});
+
+  @override
+  Widget build(context, ref) {
+    final state = ref.watch(provider);
+    final store = Store(
+        initialState: state,
+        reducer: reducer != null
+            ? Reducer.combine(reducer!, riverpodReducer(ref, actionHandler))
+            : riverpodReducer(ref, actionHandler),
+        environment: environment);
+    return builder(store);
+  }
+
+  Reducer<S, E, A> riverpodReducer(
+      WidgetRef ref, Function(WidgetRef ref, S state, A action) actionHandler) {
+    return Reducer<S, E, A>((state, action) {
+      actionHandler(ref, state, action);
+      return ReducerTuple(state, []);
+    });
+  }
+}
+
 @immutable
 class MyRiverpodReadonlyWidget extends ConsumerWidget {
   const MyRiverpodReadonlyWidget({super.key});
 
   @override
   Widget build(context, ref) {
-    final state = ref.watch(countNotifierProvider);
-
-    final store = Store(
-        initialState: state,
-        reducer: Reducer.combine(
-            integrateWithRiverpodReducer,
-            riverpodReducer<State, Environment, IntegrateWithRiverpodAction>(
-                ref, ourRiverpodActionHandler)),
-        // reducer: Reducer.combine(integrateWithRiverpodReducer,
-        //     riverpodReducer(ref, ourRiverpodActionHandler)),
-        environment: Environment(getName: () => "someString"));
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Load On Init Component'),
@@ -169,7 +196,14 @@ class MyRiverpodReadonlyWidget extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            IntegrateWithRiverpodComponentWidget(store: store),
+            RiverpodWrappedFlutterForgeComponent(
+                provider: countNotifierProvider,
+                actionHandler: ourRiverpodActionHandler,
+                environment: Environment(getName: () => "someString"),
+                reducer: integrateWithRiverpodReducer,
+                builder: (store) {
+                  return IntegrateWithRiverpodComponentWidget(store: store);
+                }),
             OutlinedButton(
                 onPressed: () =>
                     ref.read(countNotifierProvider.notifier).addFive(),
