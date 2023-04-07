@@ -97,7 +97,7 @@ final counterReducer = Reducer<CounterState, CounterEnvironment, CounterAction>(
 In the above `counterReducer` we are matching against the
 `IncrementButtonTapped` action and producing a new `CounterState` instance with
 the `count` property incremented by one. *Note:* We are passing `[]` to the
-`ReducerTuple` as we have no `Effects` we are needed to trigger.
+`ReducerTuple` as we don't want to trigger any `Effects`.
 
 ### Widget
 
@@ -126,6 +126,13 @@ class CounterComponent extends ComponentWidget<CounterState, CounterEnvironment,
   }
 }
 ```
+
+In the above you can see the use of a `Rebuilder` widget. This is provided by
+Flutter Forge to facilitate rebuilding a portion of the components subtree
+based on the state changing. In the example above we simply wrap the `Text`
+widget that is showing the `state.count` property with `Rebuilder` as that is
+the only piece of the widget subtree that needs to be rebuilt when state
+changes.
 
 ### Usage
 
