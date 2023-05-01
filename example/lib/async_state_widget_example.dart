@@ -4,25 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:equatable/equatable.dart';
 
-// State definition
-@immutable
-class Foo extends Equatable {
-  final String name;
-  const Foo(this.name);
+class EquatableString extends Equatable {
+  final String val;
+  const EquatableString(this.val);
 
   @override
-  List<Object> get props => [name];
+  List<Object> get props => [val];
 }
 
 @immutable
 class AsyncStateWidgetExampleState extends Equatable {
-  const AsyncStateWidgetExampleState({required this.count, required this.foo});
+  const AsyncStateWidgetExampleState({required this.name});
 
-  final int count;
-  final AsyncState<Foo> foo;
+  final AsyncState<EquatableString> name;
 
   @override
-  List<Object> get props => [count, foo];
+  List<Object> get props => [name];
 }
 
 class AsyncStateWidgetExampleEnvironment {}
@@ -32,21 +29,12 @@ class AsyncStateWidgetExampleEnvironment {}
 // Actions
 abstract class AsyncStateWidgetExampleAction implements ReducerAction {}
 
-class AsyncStateWidgetExampleIncrementAction
-    implements AsyncStateWidgetExampleAction {}
-
 // Reducer
 final asyncStateWidgetExampleReducer = Reducer<
     AsyncStateWidgetExampleState,
     AsyncStateWidgetExampleEnvironment,
     AsyncStateWidgetExampleAction>((state, action) {
-  if (action is AsyncStateWidgetExampleIncrementAction) {
-    return ReducerTuple(
-        AsyncStateWidgetExampleState(count: state.count + 1, foo: state.foo),
-        []);
-  } else {
-    return ReducerTuple(state, []);
-  }
+  return ReducerTuple(state, []);
 });
 
 // Stateful Widget
@@ -65,7 +53,7 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
             store: store ??
                 Store(
                     initialState: const AsyncStateWidgetExampleState(
-                        count: 0, foo: AsyncState.initial()),
+                        name: AsyncState.initial()),
                     reducer: asyncStateWidgetExampleReducer.debug(
                         name: "asyncStateWidgetExampleReducer"),
                     environment: AsyncStateWidgetExampleEnvironment()));
@@ -85,34 +73,22 @@ class AsyncStateWidgetExampleComponentWidget extends ComponentWidget<
             Column(children: [
               AsyncStateWidget(
                   store: store.scopeAsyncStateSync(
-                      loader: (_) => Future.delayed(
-                            const Duration(seconds: 5),
-                            () => const Foo("Woot woot!"),
-                          ),
-                      toChildState: (s) => s.foo,
-                      fromChildState: (s, cs) => AsyncStateWidgetExampleState(
-                            foo: cs,
-                            count: s.count,
-                          ))),
+                      loader: (_) => Future.delayed(const Duration(seconds: 5),
+                          () => const EquatableString("Woot woot!")),
+                      toChildState: (s) => s.name,
+                      fromChildState: (s, cs) =>
+                          AsyncStateWidgetExampleState(name: cs))),
               Rebuilder(
                   store: store,
                   builder: (context, state, child) {
                     return Column(children: [
-                      state.foo.when(
-                          initial: () => const Text('Foo Initial'),
+                      state.name.when(
+                          initial: () => const Text('Name Initial'),
                           loading: () => const Text('Loading...'),
                           data: (v) => Text('data = $v'),
                           error: (e, __) => Text('error = ${e.toString()}')),
-                      Text(
-                        '${state.count}',
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
                     ]);
                   }),
-              OutlinedButton(
-                  onPressed: () =>
-                      viewStore.send(AsyncStateWidgetExampleIncrementAction()),
-                  child: const Text("increment"))
             ])
           ],
         ),
