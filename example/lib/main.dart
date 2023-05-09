@@ -7,6 +7,7 @@ import 'compose_component_owning_state.dart' as compose_component_owning_state;
 import 'load_on_component_init.dart' as load_on_component_init;
 import 'async_state_widget_example.dart' as async_state_widget_example;
 import 'integrate_with_riverpod.dart' as integrate_with_riverpod;
+import 'create_post.dart' as create_post;
 import 'override_ui.dart' as override_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -138,6 +139,34 @@ class Home extends StatelessWidget {
                             .MyRiverpodReadonlyWidget()));
               },
               child: const Text('IntegrateWithRiverpodComponentWidget Example'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => create_post.CreatePostComponentWidget(
+                      store: Store(
+                        initialState:
+                            const create_post.CreatePostComponentState(
+                                message: "",
+                                postSubmissionStatus:
+                                    create_post.SubmissionStatus.pending),
+                        reducer: create_post.createPostComponentReducer
+                            .debug(name: "overrideUi"),
+                        environment: create_post.CreatePostComponentEnvironment(
+                            (message) {
+                          return Future.delayed(const Duration(seconds: 10));
+                        }),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: const Text('CreatePost Component Example'),
             ),
           ),
         ])));
