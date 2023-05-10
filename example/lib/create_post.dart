@@ -42,7 +42,7 @@ class CreatePostComponentEffects {
 }
 
 // Actions
-abstract class CreatePostComponentAction implements ReducerAction {}
+sealed class CreatePostComponentAction implements ReducerAction {}
 
 class CreatePostComponentSubmitButtonTapped
     implements CreatePostComponentAction {}
@@ -60,32 +60,31 @@ class CreatePostComponentMessageUpdated implements CreatePostComponentAction {
 // Reducer
 final createPostComponentReducer = Reducer<CreatePostComponentState,
     CreatePostComponentEnvironment, CreatePostComponentAction>((state, action) {
-  if (action is CreatePostComponentSubmitButtonTapped) {
-    return ReducerTuple(
-        CreatePostComponentState(
-            message: state.message,
-            postSubmissionStatus: SubmissionStatus.submitting),
-        [CreatePostComponentEffects.createPost]);
-  } else if (action is CreatePostComponentSuccessfullyPosted) {
-    return ReducerTuple(
-        CreatePostComponentState(
-            message: state.message,
-            postSubmissionStatus: SubmissionStatus.succeeded),
-        []);
-  } else if (action is CreatePostComponentFailedToPost) {
-    return ReducerTuple(
-        CreatePostComponentState(
-            message: state.message,
-            postSubmissionStatus: SubmissionStatus.failed),
-        []);
-  } else if (action is CreatePostComponentMessageUpdated) {
-    return ReducerTuple(
-        CreatePostComponentState(
-            message: action.message,
-            postSubmissionStatus: state.postSubmissionStatus),
-        []);
-  } else {
-    return ReducerTuple(state, []);
+  switch (action) {
+    case CreatePostComponentSubmitButtonTapped _:
+      return ReducerTuple(
+          CreatePostComponentState(
+              message: state.message,
+              postSubmissionStatus: SubmissionStatus.submitting),
+          [CreatePostComponentEffects.createPost]);
+    case CreatePostComponentSuccessfullyPosted _:
+      return ReducerTuple(
+          CreatePostComponentState(
+              message: state.message,
+              postSubmissionStatus: SubmissionStatus.succeeded),
+          []);
+    case CreatePostComponentFailedToPost _:
+      return ReducerTuple(
+          CreatePostComponentState(
+              message: state.message,
+              postSubmissionStatus: SubmissionStatus.failed),
+          []);
+    case CreatePostComponentMessageUpdated _:
+      return ReducerTuple(
+          CreatePostComponentState(
+              message: action.message,
+              postSubmissionStatus: state.postSubmissionStatus),
+          []);
   }
 });
 
