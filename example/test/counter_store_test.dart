@@ -16,9 +16,9 @@ void main() {
       // actions and their associated resulting states. This can be more
       // than just the action that you send in as some actions have effects
       // that after being processed send an action back into the store.
-      final results = await store.send(counter.IncrementCounterByOne());
+      final results = await store.send(counter.CounterIncrementButtonTapped());
       expect(results.length, 1);
-      expect(results[0].action is counter.IncrementCounterByOne, true);
+      expect(results[0].action is counter.CounterIncrementButtonTapped, true);
       expect(results[0].state, const counter.State(count: 1));
     });
   });
