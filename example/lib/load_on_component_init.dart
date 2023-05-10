@@ -109,7 +109,7 @@ class LoadOnInitComponentWidget
                   print("rebuilding the count Text");
                   return Text(
                     '$count',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   );
                 }),
             OutlinedButton(

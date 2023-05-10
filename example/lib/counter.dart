@@ -63,7 +63,7 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
           builder: (context, state, child) {
             return Text(
               '${state.count}',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             );
           }),
       OutlinedButton(

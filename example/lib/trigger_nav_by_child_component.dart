@@ -106,10 +106,10 @@ class AnotherPage extends StatelessWidget {
     print("AnotherPage build called");
     return Scaffold(
       appBar: AppBar(title: const Text('Another Page')),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text('Another Page'),
           ],
         ),

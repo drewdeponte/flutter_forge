@@ -28,7 +28,7 @@ class CounterWithOverridenUi extends counter.Counter {
           builder: (context, state, child) {
             return Text(
               '${state.count}',
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.displayLarge,
             );
           }),
       ElevatedButton(
