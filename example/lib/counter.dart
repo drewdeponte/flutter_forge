@@ -19,17 +19,16 @@ class State extends Equatable {
 }
 
 // Actions
-abstract class CounterAction implements ReducerAction {}
+sealed class CounterAction implements ReducerAction {}
 
-class IncrementCounterByOne implements CounterAction {}
+class CounterIncrementButtonTapped implements CounterAction {}
 
 // Reducer
 final counterReducer = Reducer<State, Environment, CounterAction>(
     (State state, CounterAction action) {
-  if (action is IncrementCounterByOne) {
-    return ReducerTuple(State(count: state.count + 1), []);
-  } else {
-    return ReducerTuple(state, []);
+  switch (action) {
+    case CounterIncrementButtonTapped _:
+      return ReducerTuple(State(count: state.count + 1), []);
   }
 });
 
@@ -67,7 +66,7 @@ class Counter extends ComponentWidget<State, Environment, CounterAction> {
             );
           }),
       OutlinedButton(
-          onPressed: () => viewStore.send(IncrementCounterByOne()),
+          onPressed: () => viewStore.send(CounterIncrementButtonTapped()),
           child: const Text("increment"))
     ]);
   }

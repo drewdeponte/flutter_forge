@@ -32,7 +32,8 @@ class CounterWithOverridenUi extends counter.Counter {
             );
           }),
       ElevatedButton(
-          onPressed: () => viewStore.send(counter.IncrementCounterByOne()),
+          onPressed: () =>
+              viewStore.send(counter.CounterIncrementButtonTapped()),
           child: const Text("overriden ui - increment"))
     ]);
   }
