@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:equatable/equatable.dart';
-import '../../utils/app_wrapper.dart';
+import '../../../utils/app_wrapper.dart';
 
 @immutable
 class _MyCounterWidgetState extends Equatable {
