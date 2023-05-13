@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+
+hooks_path=${0:a:h}
+dot_git_ps_path=$(dirname $hooks_path)
+
+source "$dot_git_ps_path/vendor/libs/messaging.zsh"
+source "$dot_git_ps_path/vendor/libs/general.zsh"
+source "$dot_git_ps_path/vendor/libs/ticket_id_verification.zsh"
+source "$dot_git_ps_path/vendor/libs/git.zsh"
+source "$dot_git_ps_path/vendor/libs/lcov_test_coverage.zsh"
+source "$dot_git_ps_path/vendor/libs/git_backed_test_coverage.zsh"
+
+echo "\n\nInstalling NPM Dependencies Back To Normal..."
+time npm install
+exit_nonzero $? "npm install failed" 10
+
+exit 0

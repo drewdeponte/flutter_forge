@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+libs_path=${0:a:h}
+
+source "$libs_path/lcov_test_coverage.zsh"
+
+coverage=$(get_current_lcov_test_coverage)
+retval=$?
+if [ $retval -eq 0 ]; then
+  echo "Current Test Coverage: ${coverage}"
+else
+  echo "Failed to get current test coverage. ${coverage}"
+  exit 1
+fi

@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+
+hooks_path=${0:a:h}
+dot_git_ps_path=$(dirname $hooks_path)
+
+source "$dot_git_ps_path/vendor/libs/messaging.zsh"
+source "$dot_git_ps_path/vendor/libs/general.zsh"
+source "$dot_git_ps_path/vendor/libs/lcov_test_coverage.zsh"
+source "$dot_git_ps_path/vendor/libs/git_backed_test_coverage.zsh"
+
+integrated_commit_sha=$1
+
+current_test_coverage=$(get_current_lcov_test_coverage)
+exit_nonzero $? "Failed to get current test coverage: ${current_test_coverage}" 20
+
+echo "Storing & pushing ${current_test_coverage} as the test coverage for ${integrated_commit_sha}"
+store_output=$(store_and_push_test_coverage $current_test_coverage $integrated_commit_sha "origin")
+exit_nonzero $? "Failed to store and push test coverage: ${store_output}" 30
+
+exit 0

@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+
+scripts_path=${0:a:h}
+
+source "$scripts_path/../.git-ps/vendor/libs/fvm_patch.zsh"
+
+which_output=$(which lcov)
+if [ $? -ne 0 ]; then
+	echo "Running the tests with coverage enabled depends on lcov being installed. Just 'brew install lcov' and you should be good."
+	exit 1
+fi
+
+# Note: the scripts/generate_test_coverage_helper.sh has some code that
+# generates a test helper file that causes all of the files we care about
+# having test coverage on be imported. There are a few ignore patterns in place
+# there but they are pretty high level and generic and you generally shouldn't
+# have to worry about them for dialing in code coverage. The filters below in
+# the lcov command are where you should be excluding things that we shouldn't
+# be computing test coverage based on.
+./scripts/generate_test_coverage_helper
+
+# run test suite with test coverage lcov report
+fvm flutter test --coverage
+if [ $? -ne 0 ]; then
+	echo "Some tests failed."
+	exit 2
+fi
+
+# Note: We exclude files or folders here because even if we exclude files from
+# the generated import file about they can still be reached through the
+# executation path and therefore still included in the lcov report. Removing
+# them here makes it so that even in that case they are excluded here.
+lcov --remove coverage/lcov.info 'lib/*/*.freezed.dart' 'lib/*/*.g.dart' 'lib/*/*.part.dart' 'lib/generated/*.dart' 'lib/generated/*/*.dart' 'lib/l10n/*' 'lib/themes/*.dart' 'lib/config/app_config.dart' 'lib/**/*_screen.dart' 'lib/main.dart' 'lib/global_providers.dart' '*_form*.dart' '*_button.dart' 'lib/ui/reusable/*.dart' 'lib/ui/generators/*.dart' 'lib/ui/dialogs/*.dart' '*_field*.dart' 'lib/logic/graphql/*' '*_artemis_client.dart' -o coverage/lcov.info
+
+# generate html coverage report
+genhtml coverage/lcov.info -o coverage/html

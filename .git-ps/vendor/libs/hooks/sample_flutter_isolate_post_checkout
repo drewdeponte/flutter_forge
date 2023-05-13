@@ -1,0 +1,89 @@
+#!/usr/bin/env zsh
+
+hooks_path=${0:a:h}
+dot_git_ps_path=$(dirname $hooks_path)
+
+source "$dot_git_ps_path/vendor/libs/fvm_patch.zsh"
+source "$dot_git_ps_path/vendor/libs/messaging.zsh"
+source "$dot_git_ps_path/vendor/libs/general.zsh"
+source "$dot_git_ps_path/vendor/libs/ticket_id_verification.zsh"
+source "$dot_git_ps_path/vendor/libs/git.zsh"
+source "$dot_git_ps_path/vendor/libs/lcov_test_coverage.zsh"
+source "$dot_git_ps_path/vendor/libs/git_backed_test_coverage.zsh"
+
+echo "\n\nChecking for dependencies..."
+exit_if_cmd_missing "lcov" "Running the tests with coverage enabled depends on lcov being installed. Just 'brew install lcov' and you should be good." 1
+
+current_git_commit_message_contains "skip_ticket_id_check"
+if [ $? -ne 0 ]; then
+  echo "\n\nVerifying ticket id presence in commit message..."
+  verify_ticket_id_present
+  exit_nonzero $? "Ticket reference missing, add ticket link or number in format: PROJ-###" 1
+fi
+
+echo "\n\nRunning scripts/isolate-setup.sh..."
+sh scripts/isolate-setup.sh
+exit_nonzero $? "scripts/isolate-setup.sh failed" 10
+
+echo "\n\nChecking for uncommitted changes..."
+uncommitted_files_count=$(get_uncommitted_files_count)
+exit_nonzero $? "failed to check for uncommitted changes" 20
+exit_nonzero $uncommitted_files_count "Uncommitted changes exist" 25
+
+echo "\n\nRunning flutter format..."
+time fvm flutter format --set-exit-if-changed .
+exit_nonzero $? "Flutter formatting issues detected" 30
+
+echo "\n\nRunning flutter analyze..."
+time fvm flutter analyze .
+exit_nonzero $? "Flutter analyze failed" 40
+
+echo "\n\nRunning flutter test..."
+time scripts/test_with_coverage
+exit_nonzero $? "Flutter test failed" 50
+
+current_git_commit_message_contains "skip_test_coverage_check"
+if [ $? -ne 0 ]; then
+	echo "\n\nGetting current test coverage..."
+	current_test_coverage=$(get_current_lcov_test_coverage)
+	exit_nonzero $? "Failed to get current test coverage: ${current_test_coverage}" 60
+
+	echo "\n\nEvaluating test coverage..."
+	test_coverage_output=$(evaluate_test_coverage $current_test_coverage "origin")
+	retval=$?
+	if [ $retval -eq 0 ]; then
+		eval "stringarray=($test_coverage_output)"
+		cur_commit_coverage=$stringarray[1]
+		cur_commit_sha=$stringarray[2]
+		parent_commit_coverage=$stringarray[3]
+		parent_commit_sha=$stringarray[4]
+		echo "cur_commit_coverage: ${cur_commit_coverage}"
+		echo "cur_commit_sha: ${cur_commit_sha}"
+		echo "parent_commit_coverage: ${parent_commit_coverage}"
+		echo "parent_commit_sha: ${parent_commit_sha}"
+		good_msg "Increased or maintained test coverage"
+	elif [ $retval -eq 1 ]; then
+		eval "stringarray=($test_coverage_output)"
+		cur_commit_coverage=${stringarray[1]}
+		cur_commit_sha=${stringarray[2]}
+		echo "cur_commit_coverage: ${cur_commit_coverage}"
+		echo "cur_commit_sha: ${cur_commit_sha}"
+		echo "Missing parent test coverage"
+	elif [ $retval -eq 2 ]; then
+		eval "stringarray=($test_coverage_output)"
+		cur_commit_coverage=$stringarray[1]
+		cur_commit_sha=$stringarray[2]
+		parent_commit_coverage=$stringarray[3]
+		parent_commit_sha=$stringarray[4]
+		echo "cur_commit_coverage: ${cur_commit_coverage}"
+		echo "cur_commit_sha: ${cur_commit_sha}"
+		echo "parent_commit_coverage: ${parent_commit_coverage}"
+		echo "parent_commit_sha: ${parent_commit_sha}"
+		warning_msg "Decreased test coverage"
+	elif [ $retval -gt 2 ]; then
+		bad_msg "evaluate_test_coverage failed: $test_coverage_output"
+		exit 70
+	fi
+fi
+
+exit 0

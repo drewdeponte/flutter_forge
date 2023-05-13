@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+
+libs_path=${0:a:h}
+
+source "$libs_path/git_backed_test_coverage.zsh"
+
+get_and_print_coverage() {
+  commit_sha=$1
+  coverage=$(read_test_coverage "${commit_sha}")
+  retval=$?
+  if [ $retval -eq 0 ]; then
+    # success
+    echo "${commit_sha}: ${coverage}"
+  elif [ $retval -eq 1 ]; then
+    # ref doesn't exist
+    echo "${commit_sha}: ---"
+  else
+    # actual failure
+    echo "${commit_sha}: xxx"
+  fi
+}
+
+get_and_print_coverage "$1"

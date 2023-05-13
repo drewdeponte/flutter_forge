@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+libs_path=${0:a:h}
+
+source "$libs_path/git_backed_test_coverage.zsh"
+
+sha=$1
+
+git fetch --all -p
+fetch_test_coverage_data "origin"
+if [ $? -ne 0 ]; then
+  echo "Failed to fetch test coverage data"
+  exit 1
+fi
+
+git rev-list HEAD...$sha | xargs -I '{}' -L1 ${libs_path}/show_commit_code_coverage {}

@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+# check if .git-ps folder exists in current working directory
+if [ -d "./.git-ps" ]; then
+  rm -rf .git-ps/vendor/libs && git clone --depth 1 git@github.com:uptech/jumpstart_project_shell_libs.git .git-ps/vendor/libs && rm -rf .git-ps/vendor/libs/.git
+else
+  echo "This script is only designed to be run from the root of the project. We were not able to find the .git-ps folder in your current working directory."
+fi
+

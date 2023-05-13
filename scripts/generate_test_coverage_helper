@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+scripts_path=${0:a:h}
+project_root_path=$(dirname $scripts_path)
+
+source "$project_root_path/.git-ps/vendor/libs/flutter_test_coverage.zsh"
+
+# check if .git-ps folder exists in current working directory
+if [ -d "./.git-ps" ]; then
+  package_name=$(grep -E "^name:\s+(.+)$" pubspec.yaml | sed -E 's/^name:[ ]+//g')
+
+  echo "Generating test coverage helper..."
+
+  # Note: Thise files_to_import excludes generated files and explicitly the
+  # `generated_plugin_registrant.dart` because the generated files we don't want
+  # to compute coverage on so it saves a bit on performance and the
+  # `generated_plugin_registrant.dart` if imported will cause the test suite to
+  # not run properly.
+  files_to_import=$(find lib '!' -path '*generated*/*' '!' -name '*.g.dart' '!' -name '*.part.dart' '!' -name '*.freezed.dart' '!' -name 'generated_plugin_registrant.dart' -name '*.dart')
+  generate_flutter_test_import_file "$files_to_import" "$package_name" "test/coverage_helper_test.dart"
+
+  echo "Generated test coverage helper - test/coverage_helper_test.dart"
+else
+  echo "This script is only designed to be run from the root of the project. We were not able to find the .git-ps folder in your current working directory."
+fi
