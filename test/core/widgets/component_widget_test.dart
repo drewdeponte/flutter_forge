@@ -32,8 +32,8 @@ final _myCounterReducer = Reducer<_MyCounterWidgetState,
 
 class _MyCounterWidget extends ComponentWidget<_MyCounterWidgetState,
     _MyCounterWidgetEnvironment, _MyCounterWidgetAction> {
-  // ignore: unused_element
   const _MyCounterWidget(
+      // ignore: unused_element
       {super.key,
       required super.store,
       this.initStateCalled,
