@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'reducer.dart';
 import 'reducer_action.dart';
 import 'view_store_interface.dart';
-import 'package:equatable/equatable.dart';
 
 /// ViewStore is a Riverpod Notifier designed to use the Redux pattern to
 /// facilitate managing state change in a controlled way
@@ -13,8 +12,8 @@ import 'package:equatable/equatable.dart';
 /// interpreted by the Reducer provided at initialization and the Reducer
 /// produces the new representation of state which the ViewStore then
 /// applies and notifies any observers of that state.
-class ViewStore<S extends Equatable, E, A extends ReducerAction>
-    extends ValueNotifier<S> implements ViewStoreInterface<S, A> {
+class ViewStore<S, E, A extends ReducerAction> extends ValueNotifier<S>
+    implements ViewStoreInterface<S, A> {
   ViewStore({
     required S initialState,
     required Reducer<S, E, A> reducer,

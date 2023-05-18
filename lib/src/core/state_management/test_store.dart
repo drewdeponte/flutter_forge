@@ -1,8 +1,7 @@
 import 'reducer_action.dart';
 import 'reducer.dart';
-import 'package:equatable/equatable.dart';
 
-class ActionStateTuple<A extends ReducerAction, S extends Equatable> {
+class ActionStateTuple<A extends ReducerAction, S> {
   final A action;
   final S state;
   ActionStateTuple(this.action, this.state);
@@ -11,8 +10,7 @@ class ActionStateTuple<A extends ReducerAction, S extends Equatable> {
   String toString() => "ActionStateTuple($action, $state)";
 }
 
-class TestStore<S extends Equatable, E, A extends ReducerAction,
-    CS extends Equatable, CA extends ReducerAction> {
+class TestStore<S, E, A extends ReducerAction, CS, CA extends ReducerAction> {
   TestStore(
       {required S initialState,
       required Reducer<S, E, A> reducer,

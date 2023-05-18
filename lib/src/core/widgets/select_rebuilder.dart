@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import '../state_management/store_interface.dart';
 import '../state_management/reducer_action.dart';
-import 'package:equatable/equatable.dart';
 import '../../utils/selected_value_notifier.dart';
 
 /// Rebuild a portion of the widget tree when a selected portion of state changes.
@@ -16,7 +15,7 @@ import '../../utils/selected_value_notifier.dart';
 /// the piece of that state which you want to trigger rebuild on. It also takes
 /// the `bulider` function in to build a widget based on changed value.
 @immutable
-class SelectRebuilder<S extends Equatable, E, A extends ReducerAction, T>
+class SelectRebuilder<S, E, A extends ReducerAction, T>
     extends StatelessWidget {
   final StoreInterface<S, E, A> store;
   final T Function(S) select;

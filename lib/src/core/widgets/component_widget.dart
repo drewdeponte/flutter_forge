@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import '../state_management/store_interface.dart';
 import '../state_management/view_store_interface.dart';
 import '../state_management/reducer_action.dart';
-import 'package:equatable/equatable.dart';
 
 /// Base intended to be extended to create the widget portion of a Flutter
 /// Forge component.
@@ -52,7 +51,7 @@ import 'package:equatable/equatable.dart';
 /// [Rebuilder] widget to facilitate rebuilding targeted focused sections
 /// of the widget tree when state changes rather than rebuilding the entire
 /// widget tree. This is more and more important as you do more composition.
-abstract class ComponentWidget<S extends Equatable, E, A extends ReducerAction>
+abstract class ComponentWidget<S, E, A extends ReducerAction>
     extends StatefulWidget {
   const ComponentWidget({
     super.key,
@@ -92,7 +91,7 @@ abstract class ComponentWidget<S extends Equatable, E, A extends ReducerAction>
   createState() => _ComponentState(store);
 }
 
-class _ComponentState<S extends Equatable, E, A extends ReducerAction>
+class _ComponentState<S, E, A extends ReducerAction>
     extends State<ComponentWidget> {
   _ComponentState(this.store);
   final StoreInterface<S, E, A> store;

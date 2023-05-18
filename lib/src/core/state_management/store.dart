@@ -4,10 +4,8 @@ import 'view_store.dart';
 import 'reducer.dart';
 import 'reducer_tuple.dart';
 import 'listener_function_view_store_binding.dart';
-import 'package:equatable/equatable.dart';
 
-class Store<S extends Equatable, E, A extends ReducerAction>
-    extends StoreInterface<S, E, A> {
+class Store<S, E, A extends ReducerAction> extends StoreInterface<S, E, A> {
   Store(
       {required S initialState,
       required Reducer<S, E, A> reducer,
@@ -27,7 +25,7 @@ class Store<S extends Equatable, E, A extends ReducerAction>
 
   @override
   StoreInterface<CS, CE, CA>
-      scopeParentHandles<CS extends Equatable, CA extends ReducerAction, CE>(
+      scopeParentHandles<CS, CA extends ReducerAction, CE>(
           {required CS Function(S) toChildState,
           required A Function(CA) fromChildAction,
           required CE Function(E) toChildEnvironment}) {
@@ -72,12 +70,11 @@ class Store<S extends Equatable, E, A extends ReducerAction>
   }
 
   @override
-  StoreInterface<CS, CE, CA>
-      scopeSyncState<CS extends Equatable, CA extends ReducerAction, CE>(
-          {required CS Function(S) toChildState,
-          required S Function(S, CS) fromChildState,
-          required Reducer<CS, CE, CA> childReducer,
-          required CE Function(E) toChildEnvironment}) {
+  StoreInterface<CS, CE, CA> scopeSyncState<CS, CA extends ReducerAction, CE>(
+      {required CS Function(S) toChildState,
+      required S Function(S, CS) fromChildState,
+      required Reducer<CS, CE, CA> childReducer,
+      required CE Function(E) toChildEnvironment}) {
     final childStore = Store(
         initialState: toChildState(viewStore.state),
         reducer: childReducer,
@@ -118,13 +115,13 @@ class Store<S extends Equatable, E, A extends ReducerAction>
   }
 
   @override
-  StoreInterface<CS, CE, CA> scopeForwardActionsAndSyncState<
-          CS extends Equatable, CA extends ReducerAction, CE>(
-      {required CS Function(S) toChildState,
-      required S Function(S, CS) fromChildState,
-      required A Function(CA) fromChildAction,
-      required Reducer<CS, CE, CA> childReducer,
-      required CE Function(E) toChildEnvironment}) {
+  StoreInterface<CS, CE, CA>
+      scopeForwardActionsAndSyncState<CS, CA extends ReducerAction, CE>(
+          {required CS Function(S) toChildState,
+          required S Function(S, CS) fromChildState,
+          required A Function(CA) fromChildAction,
+          required Reducer<CS, CE, CA> childReducer,
+          required CE Function(E) toChildEnvironment}) {
     final propagateActionReducer = Reducer<CS, CE, CA>((state, action) {
       final reducerTuple = childReducer.run(state, action);
       final parentAction = fromChildAction(action);

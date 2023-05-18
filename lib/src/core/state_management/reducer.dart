@@ -1,8 +1,7 @@
 import 'reducer_tuple.dart';
 import 'reducer_action.dart';
-import 'package:equatable/equatable.dart';
 
-class Reducer<S extends Equatable, E, A extends ReducerAction> {
+class Reducer<S, E, A extends ReducerAction> {
   Reducer(this.run);
   final ReducerTuple<S, E, A> Function(S state, A action) run;
 
@@ -24,13 +23,12 @@ class Reducer<S extends Equatable, E, A extends ReducerAction> {
     });
   }
 
-  Reducer<PS, PE, PA>
-      pullback<PS extends Equatable, PE, PA extends ReducerAction>(
-          {required S Function(PS) toChildState,
-          required PS Function(S) fromChildState,
-          required A? Function(PA) toChildAction,
-          required PA Function(A) fromChildAction,
-          required E Function(PE) toChildEnvironment}) {
+  Reducer<PS, PE, PA> pullback<PS, PE, PA extends ReducerAction>(
+      {required S Function(PS) toChildState,
+      required PS Function(S) fromChildState,
+      required A? Function(PA) toChildAction,
+      required PA Function(A) fromChildAction,
+      required E Function(PE) toChildEnvironment}) {
     return Reducer<PS, PE, PA>((PS state, PA action) {
       final childState = toChildState(state);
       final optionalChildAction = toChildAction(action);
@@ -54,7 +52,7 @@ class Reducer<S extends Equatable, E, A extends ReducerAction> {
   }
 
   static Reducer<COMBS, COMBE, COMBA>
-      combine<COMBS extends Equatable, COMBE, COMBA extends ReducerAction>(
+      combine<COMBS, COMBE, COMBA extends ReducerAction>(
           Reducer<COMBS, COMBE, COMBA> reducerA,
           Reducer<COMBS, COMBE, COMBA> reducerB) {
     return Reducer((state, action) {

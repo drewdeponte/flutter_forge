@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-abstract class AsyncState<T extends Equatable> extends Equatable {
+abstract class AsyncState<T extends Object> extends Equatable {
   const AsyncState._();
 
   const factory AsyncState.initial() = AsyncStateInitial<T>;
@@ -35,7 +35,7 @@ abstract class AsyncState<T extends Equatable> extends Equatable {
   }
 }
 
-class AsyncStateInitial<T extends Equatable> extends AsyncState<T> {
+class AsyncStateInitial<T extends Object> extends AsyncState<T> {
   const AsyncStateInitial() : super._();
 
   @override
@@ -77,7 +77,7 @@ class AsyncStateInitial<T extends Equatable> extends AsyncState<T> {
   List<Object> get props => [isInitial, isLoading, hasValue, hasError];
 }
 
-class AsyncStateLoading<T extends Equatable> extends AsyncState<T> {
+class AsyncStateLoading<T extends Object> extends AsyncState<T> {
   const AsyncStateLoading() : super._();
 
   @override
@@ -119,7 +119,7 @@ class AsyncStateLoading<T extends Equatable> extends AsyncState<T> {
   List<Object> get props => [isInitial, isLoading, hasValue, hasError];
 }
 
-class AsyncStateData<T extends Equatable> extends AsyncState<T> {
+class AsyncStateData<T extends Object> extends AsyncState<T> {
   const AsyncStateData(this._value) : super._();
   final T _value;
 
@@ -162,7 +162,7 @@ class AsyncStateData<T extends Equatable> extends AsyncState<T> {
   List<Object> get props => [isInitial, isLoading, hasValue, hasError, _value];
 }
 
-class AsyncStateError<T extends Equatable> extends AsyncState<T> {
+class AsyncStateError<T extends Object> extends AsyncState<T> {
   final Object _error;
   final StackTrace _stackTrace;
   const AsyncStateError(this._error, this._stackTrace) : super._();

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:equatable/equatable.dart';
 
 import '../core/state_management/effect_task.dart';
 import '../core/state_management/reducer.dart';
@@ -15,8 +14,7 @@ abstract class AsyncStateAction extends ReducerAction {}
 
 class AsyncStateLoadAction extends AsyncStateAction {}
 
-class AsyncStateLoadCompleteAction<T extends Equatable>
-    extends AsyncStateAction {
+class AsyncStateLoadCompleteAction<T extends Object> extends AsyncStateAction {
   final T value;
   AsyncStateLoadCompleteAction(this.value);
 }
@@ -31,7 +29,7 @@ class AsyncStateResetAction extends AsyncStateAction {}
 
 // Reducer
 Reducer<AsyncState<T>, E, AsyncStateAction>
-    asyncStateReducer<T extends Equatable, E>(FutureOr<T> Function(E) load) {
+    asyncStateReducer<T extends Object, E>(FutureOr<T> Function(E) load) {
   final loadEffect = EffectTask<AsyncState<T>, E, AsyncStateAction>(
     (state, environment, context) async {
       try {
@@ -61,7 +59,7 @@ Reducer<AsyncState<T>, E, AsyncStateAction>
 
 // Widget
 @immutable
-class AsyncStateWidget<T extends Equatable, E>
+class AsyncStateWidget<T extends Object, E>
     extends ComponentWidget<AsyncState<T>, E, AsyncStateAction> {
   const AsyncStateWidget(
       {super.key,
