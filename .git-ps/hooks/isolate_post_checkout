@@ -36,7 +36,7 @@ exit_nonzero $? "failed to check for uncommitted changes" 20
 exit_nonzero $uncommitted_files_count "Uncommitted changes exist" 25
 
 echo "\n\nRunning flutter format..."
-time fvm flutter format --set-exit-if-changed .
+time fvm dart format --set-exit-if-changed .
 exit_nonzero $? "Flutter formatting issues detected" 30
 
 echo "\n\nRunning flutter analyze..."
