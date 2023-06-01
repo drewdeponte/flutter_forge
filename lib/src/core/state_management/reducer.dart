@@ -14,11 +14,15 @@ class Reducer<S, E, A extends ReducerAction> {
       print("  action: $action");
       // ignore: avoid_print
       print("  state: $state");
+      // ignore: avoid_print
+      print("  state.hashCode: ${state.hashCode}");
       final newReducerTuple = run(state, action);
       // ignore: avoid_print
       print("and computed");
       // ignore: avoid_print
       print("  state: ${newReducerTuple.state}");
+      // ignore: avoid_print
+      print("  state.hashCode: ${newReducerTuple.state.hashCode}");
       return newReducerTuple;
     });
   }
