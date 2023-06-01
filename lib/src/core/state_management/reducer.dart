@@ -9,7 +9,7 @@ class Reducer<S, E, A extends ReducerAction> {
     return Reducer<S, E, A>((S state, A action) {
       final displayName = name ?? "";
       // ignore: avoid_print
-      print("${displayName}Reducer received");
+      print("\n${displayName}Reducer received");
       // ignore: avoid_print
       print("  action: $action");
       // ignore: avoid_print
