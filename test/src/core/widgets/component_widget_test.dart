@@ -39,7 +39,8 @@ class _MyCounterWidget extends ComponentWidget<_MyCounterWidgetState,
       this.initStateCalled,
       this.postInitStateCalled,
       this.disposeCalled,
-      this.listenCalled});
+      this.listenCalled,
+      super.builder});
 
   final void Function()? initStateCalled;
   final void Function()? postInitStateCalled;
@@ -168,5 +169,27 @@ void main() {
     await tester.pump();
 
     expect(listenCalled, const _MyCounterWidgetState(count: 1));
+  });
+
+  testWidgets(
+      'ComponentWidget enables overriding the UI of component with the builder',
+      (WidgetTester tester) async {
+    final store = Store(
+        initialState: const _MyCounterWidgetState(count: 0),
+        reducer: _myCounterReducer,
+        environment: const _MyCounterWidgetEnvironment());
+
+    await tester.pumpWidget(
+      appWrapWidget(
+        _MyCounterWidget(
+          store: store,
+          builder: (context, store, viewStore) {
+            return const Text('We overrode the UI');
+          },
+        ),
+      ),
+    );
+
+    expect(find.text('We overrode the UI'), findsOneWidget);
   });
 }

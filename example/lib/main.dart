@@ -9,6 +9,7 @@ import 'async_state_widget_example.dart' as async_state_widget_example;
 import 'integrate_with_riverpod.dart' as integrate_with_riverpod;
 import 'create_post.dart' as create_post;
 import 'override_ui.dart' as override_ui;
+import 'override_ui_builder.dart' as override_ui_builder;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
@@ -39,6 +40,10 @@ final overrideUiStore = Store(
     initialState: const override_ui.State('override ui'),
     reducer: override_ui.overrideUiReducer.debug(name: "overrideUi"),
     environment: override_ui.Environment());
+final overrideUiBuilderStore = Store(
+    initialState: const override_ui_builder.State('override ui'),
+    reducer: override_ui_builder.overrideUiReducer.debug(name: "overrideUi"),
+    environment: override_ui_builder.Environment());
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -101,6 +106,21 @@ class Home extends StatelessWidget {
                             store: overrideUiStore)));
               },
               child: const Text('Override UI keeping business logic'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            override_ui_builder.OverrideUiComponent(
+                                store: overrideUiBuilderStore)));
+              },
+              child:
+                  const Text('Override UI with builder keeping business logic'),
             ),
           ),
           Padding(

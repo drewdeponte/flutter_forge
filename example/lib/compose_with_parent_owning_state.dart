@@ -14,7 +14,7 @@ class Environment {}
 class State extends Equatable {
   const State({required this.counterState});
 
-  final counter.State counterState;
+  final counter.CounterState counterState;
 
   @override
   List<Object> get props => [counterState];
@@ -36,7 +36,9 @@ final composeWithParentOwningStateReducer =
         (State state, ComposeWithParentOwningStateAction action) {
   if (action is IncrementCounter) {
     return ReducerTuple(
-        State(counterState: counter.State(count: state.counterState.count + 1)),
+        State(
+            counterState:
+                counter.CounterState(count: state.counterState.count + 1)),
         []);
   } else {
     return ReducerTuple(State(counterState: state.counterState), []);
@@ -53,8 +55,8 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
       : super(
             store: store ??
                 Store(
-                    initialState:
-                        const State(counterState: counter.State(count: 10)),
+                    initialState: const State(
+                        counterState: counter.CounterState(count: 10)),
                     reducer: composeWithParentOwningStateReducer.debug(
                         name: "ComposeWithParentOwningState"),
                     environment: Environment()));
@@ -76,7 +78,7 @@ class ComposeWithParentOwningState extends ComponentWidget<State, Environment,
               toChildState: (state) => state.counterState,
               fromChildState: (state, childState) =>
                   State(counterState: childState),
-              toChildEnvironment: (_) => counter.Environment(),
+              toChildEnvironment: (_) => counter.CounterEnvironment(),
               childReducer: counter.counterReducer.debug(name: "Counter"),
             )),
             TextButton(

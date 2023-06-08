@@ -1,16 +1,16 @@
-library counter;
+library counter_owning_state;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:equatable/equatable.dart';
 
 // Environment
-class CounterEnvironment {}
+class Environment {}
 
 // State
 @immutable
-class CounterState extends Equatable {
-  const CounterState({required this.count});
+class State extends Equatable {
+  const State({required this.count});
 
   final int count;
 
@@ -24,18 +24,35 @@ sealed class CounterAction implements ReducerAction {}
 class CounterIncrementButtonTapped implements CounterAction {}
 
 // Reducer
-final counterReducer = Reducer<CounterState, CounterEnvironment, CounterAction>(
-    (CounterState state, CounterAction action) {
+final counterReducer = Reducer<State, Environment, CounterAction>(
+    (State state, CounterAction action) {
   switch (action) {
     case CounterIncrementButtonTapped _:
-      return ReducerTuple(CounterState(count: state.count + 1), []);
+      return ReducerTuple(State(count: state.count + 1), []);
   }
 });
 
 // Widget
-class Counter
-    extends ComponentWidget<CounterState, CounterEnvironment, CounterAction> {
-  const Counter({super.key, required super.store, super.builder});
+class Counter extends ComponentWidget<State, Environment, CounterAction> {
+  Counter(
+      {super.key,
+      StoreInterface<State, Environment, CounterAction>? store,
+      super.builder})
+      : super(
+            store: store ??
+                Store(
+                    initialState: const State(count: 0),
+                    reducer: counterReducer.debug(name: "counter"),
+                    environment: Environment()));
+
+  // @override
+  // void listen(context, state) {
+  //   print("Listened to state change: ${state.count}");
+  //   const snackBar = SnackBar(
+  //     content: Text('Yay! A SnackBar!'),
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  // }
 
   @override
   Widget build(context, viewStore) {

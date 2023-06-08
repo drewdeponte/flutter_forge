@@ -8,9 +8,9 @@ void main() {
     test('when sent IncrementCounterByOne action it increments the count',
         () async {
       final store = TestStore(
-          initialState: const counter.State(count: 0),
+          initialState: const counter.CounterState(count: 0),
           reducer: counter.counterReducer,
-          environment: counter.Environment());
+          environment: counter.CounterEnvironment());
 
       // Send action into the store while collection a list of all the
       // actions and their associated resulting states. This can be more
@@ -19,7 +19,7 @@ void main() {
       final results = await store.send(counter.CounterIncrementButtonTapped());
       expect(results.length, 1);
       expect(results[0].action is counter.CounterIncrementButtonTapped, true);
-      expect(results[0].state, const counter.State(count: 1));
+      expect(results[0].state, const counter.CounterState(count: 1));
     });
   });
 }

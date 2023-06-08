@@ -12,9 +12,9 @@ void main() {
       (WidgetTester tester) async {
     // Create the widget store
     final store = Store(
-        initialState: const counter.State(count: 0),
+        initialState: const counter.CounterState(count: 0),
         reducer: counter.counterReducer,
-        environment: counter.Environment());
+        environment: counter.CounterEnvironment());
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(appWrapWidget(counter.Counter(store: store)));
@@ -36,9 +36,9 @@ void main() {
       (WidgetTester tester) async {
     // Create the widget store
     final store = Store(
-        initialState: const counter.State(count: 0),
+        initialState: const counter.CounterState(count: 0),
         reducer: counter.counterReducer,
-        environment: counter.Environment());
+        environment: counter.CounterEnvironment());
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(appWrapWidget(counter.Counter(store: store)));

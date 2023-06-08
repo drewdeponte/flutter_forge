@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:equatable/equatable.dart';
 
-import 'counter.dart' as counter;
+import 'counter_owning_state.dart' as counter;
 
 class Environment {}
 

@@ -1,44 +1,10 @@
-library override_ui;
+library override_ui_builder;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_forge/flutter_forge.dart';
 import 'package:equatable/equatable.dart';
 
 import 'counter.dart' as counter;
-
-// Component with overriden ui
-class CounterWithOverridenUi extends counter.Counter {
-  CounterWithOverridenUi(
-      {super.key,
-      StoreInterface<counter.CounterState, counter.CounterEnvironment,
-              counter.CounterAction>?
-          store})
-      : super(
-            store: store ??
-                Store(
-                    initialState: const counter.CounterState(count: 0),
-                    reducer: counter.counterReducer
-                        .debug(name: "CounterWithOverridenUi"),
-                    environment: counter.CounterEnvironment()));
-
-  @override
-  Widget build(context, viewStore) {
-    return Column(children: [
-      Rebuilder(
-          store: store,
-          builder: (context, state, child) {
-            return Text(
-              '${state.count}',
-              style: Theme.of(context).textTheme.displayLarge,
-            );
-          }),
-      ElevatedButton(
-          onPressed: () =>
-              viewStore.send(counter.CounterIncrementButtonTapped()),
-          child: const Text("overriden ui - increment"))
-    ]);
-  }
-}
 
 // Environment
 class Environment {}
@@ -89,7 +55,29 @@ class OverrideUiComponent
             Rebuilder(
                 store: store,
                 builder: (context, state, child) => Text(state.name)),
-            CounterWithOverridenUi(),
+            counter.Counter(
+                store: Store(
+                  initialState: const counter.CounterState(count: 0),
+                  reducer: counter.counterReducer
+                      .debug(name: "CounterWithOverridenUi"),
+                  environment: counter.CounterEnvironment(),
+                ),
+                builder: (context, store, viewStore) {
+                  return Column(children: [
+                    Rebuilder(
+                        store: store,
+                        builder: (context, state, child) {
+                          return Text(
+                            '${state.count}',
+                            style: Theme.of(context).textTheme.displayLarge,
+                          );
+                        }),
+                    ElevatedButton(
+                        onPressed: () => viewStore
+                            .send(counter.CounterIncrementButtonTapped()),
+                        child: const Text("overriden ui - increment"))
+                  ]);
+                }),
             TextButton(
                 onPressed: () => viewStore.send(AppendYourMom()),
                 child: const Text("parent append your mom to name"))
