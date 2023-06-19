@@ -28,7 +28,7 @@ abstract class AsyncState<T extends Object> extends Equatable {
     } else if (isLoading) {
       return loading();
     } else if (hasError) {
-      return error(error, stackTrace!);
+      return error(this.error!, stackTrace!);
     } else {
       return data(value!);
     }
